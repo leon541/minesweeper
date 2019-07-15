@@ -190,8 +190,6 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 	}
 
-
-
 	@Override
 	public int updateCell(int row, int col, int cover, int under) {
 		// TODO Auto-generated method stub
@@ -286,12 +284,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 		return menuBar;
 	}
 
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if ( ((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Easy") != -1) {
