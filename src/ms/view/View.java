@@ -18,25 +18,25 @@ public interface View {
 	 * @param cols
 	 * @param mines
 	 */
-	public void init(int rows, int cols, int mines);
+	public void init(int level, int rows, int cols, int mines);
 	
+	/**
+	 * 
+	 * @param level
+	 */
+	public void init(int level);
 		
 	/**
-	 * reset the view
-	 */
-	public void reset();
-	
-	/**
-	 *  update cell 
-	 */
-	
-	/**
+	 *  update cell, interface to Controller 
 	 * 
 	 * @param row  
 	 * @param col
  	 * @param cover   (0: uncovered, 1: cover, 2: flag, 3: ? )
 	 * @param under   (-1: mine, 0 - 8: number of mines, 9: mine fired)  
-	 * @return
+	 * @return   0: init 
+	 *           1: undergoing
+	 *           2: win
+	 *           3: lose
 	 */
 	public int updateCell(int row, int col, int cover, int under);
 	/**
