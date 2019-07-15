@@ -8,13 +8,14 @@ import ms.controller.Controller;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.ButtonGroup;
-
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -37,9 +38,17 @@ public class BoardView implements View, MouseListener, ActionListener {
 	private static final int LEVEL_HARD  = 3;
 
 	private final int CELL_SIZE = 25;
+
+	public static ImageIcon [] ICON_FACES = { 
+			new ImageIcon("images/facesmile.png"),
+			new ImageIcon("images/facewin.png"),
+			new ImageIcon("images/facelose.png")
+	};
+	
+	// temp;
+	int faceIndex = 0; 
 	
 	private JFrame mainFrame; // main window
-	
 	Controller controller;
 
 	/**
@@ -53,6 +62,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 	int rows, cols, mines;
 	CellButton [][] cellButtons;
+	JButton resetButton ; 
 
 	/**
 	 * default view 
@@ -81,7 +91,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 	}
 
 	/**
-	 * 
+	 * Main Panel in the frame
 	 * @return
 	 */
 	JPanel getMainPanel() {
@@ -95,13 +105,26 @@ public class BoardView implements View, MouseListener, ActionListener {
 		mainPanel.addMouseListener(this);
 		return mainPanel;
 	}
-
+	/**
+	 * Top Panel in main Panel, including number of mine counter and timer 
+	 *
+	 * @return
+	 */
 	JPanel getTopPanel() {
 		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new GridLayout(1, 3, 0, 0));
-		topPanel.add(getCounterPanel());
-		topPanel.add(new JButton("reset"));
-		topPanel.add(getCounterPanel());
+		//topPanel.setLayout(new FlowLayout());
+		topPanel.setLayout(new BorderLayout());
+		topPanel.add(getCounterPanel(),  BorderLayout.WEST);
+		
+		resetButton = new JButton();
+		resetButton.setIcon(ICON_FACES[0]);
+		resetButton.setPreferredSize(new Dimension(50, 50));
+		resetButton.addActionListener(this);
+		
+		JPanel resetPanel = new JPanel(); 
+		resetPanel.add(resetButton);
+		topPanel.add(resetPanel,BorderLayout.CENTER );
+		topPanel.add(getCounterPanel(),  BorderLayout.EAST);
 
 		return topPanel;
 	}
@@ -109,7 +132,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 	JPanel getCounterPanel() {
 		JPanel countPanel = new JPanel();
 		countPanel.setBackground(Color.BLUE);
-		//countPanel.setPreferredSize(new Dimension(100, 50));
+		countPanel.setPreferredSize(new Dimension(50, 50));
 		return countPanel;
 	}
 
@@ -210,9 +233,9 @@ public class BoardView implements View, MouseListener, ActionListener {
 			init(level, 16, 30, 99);
 			break;
 		}
-		
+
 	}
-	
+
 	@Override
 	public void init(int level,  int rows, int cols, int mines) {
 		// TODO Auto-generated method stub
@@ -221,10 +244,10 @@ public class BoardView implements View, MouseListener, ActionListener {
 		this.mines = mines;
 
 		cellButtons = new CellButton[rows][cols];
-		
+
 		if(mainFrame != null)
 			mainFrame.dispose();
-		
+
 		mainFrame = new JFrame("Mine Sweeper");
 		mainFrame.setJMenuBar(buildMenu(level));
 		//this.setSize(this.rows * CELL_SIZE + MARGIN, this.cols * CELL_SIZE + MARGIN);
@@ -284,18 +307,25 @@ public class BoardView implements View, MouseListener, ActionListener {
 		return menuBar;
 	}
 
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if ( ((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Easy") != -1) {
-			System.out.println("easy");
-			init(LEVEL_EASY);
-		} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Medium") != -1) {
-			System.out.println("Medium");
-			init(LEVEL_MEDIUM);
-		} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Hard") != -1) {
-			System.out.println("Hard");
-			init(LEVEL_HARD);
+		if(e.getSource() instanceof JRadioButtonMenuItem) {  // leve in the menu
+			if ( ((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Easy") != -1) {
+				System.out.println("easy");
+				init(LEVEL_EASY);
+			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Medium") != -1) {
+				System.out.println("Medium");
+				init(LEVEL_MEDIUM);
+			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Hard") != -1) {
+				System.out.println("Hard");
+				init(LEVEL_HARD);
+			}
+		} else if(e.getSource() instanceof JButton) {
+			 if(++faceIndex == ICON_FACES.length)
+				faceIndex = 0; 
+			resetButton.setIcon(ICON_FACES[faceIndex]);
+			System.out.println("reset");
 		}
 	}
 
