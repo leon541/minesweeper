@@ -22,12 +22,20 @@ public class Constants {
 	public static final int GAME_STATUS_LOSE  = 2 ;
 	
 	/**
-	 * passed from Controller to view
+	 * passed from Controller to view for cover
 	 */
-	public static final int FLAG_TYPE_NONE = 1; 
-	public static final int FLAG_TYPE_RED = 2;
-	public static final int FLAG_TYPE_QUESTION = 3; 
+	public static final int FLAG_TYPE_NONE = 0; 
+	public static final int FLAG_TYPE_RED = 1;
+	public static final int FLAG_TYPE_QUESTION = 2 ;
 
+	
+	/**
+	 * passed from Controller to view for cover
+	 */
+	public static final int SHOW_MINE = -1; 
+	public static final int SHOW_MINE_FIRED = -2; // when lose 
+	
+	
 	
 	/*
 	 * game level and parameters

@@ -215,7 +215,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 	@Override
 	public int updateCell(int row, int col, int cover, int under) {
-		// TODO Auto-generated method stub
+		this.cellButtons[row][col].updateIcon(cover, under);
 		return 0;
 	}
 

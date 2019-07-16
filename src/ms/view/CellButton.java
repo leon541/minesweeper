@@ -1,5 +1,6 @@
 package ms.view;
 
+import ms.Constants;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -19,12 +20,18 @@ public class CellButton extends JButton {
 	private int row;   // row localtion
 	private int iconIndex; 
 	
-	public static ImageIcon [] ICONS = {
+	public static ImageIcon [] ICONS_COVERED = {
 			new ImageIcon("images/blank.png"),
 			new ImageIcon("images/flag.png"),
 			new ImageIcon("images/unknown.png"),
-			new ImageIcon("images/mine_click.png"),
+	};
+
+	public static ImageIcon[] ICONS_MINES = {
 			new ImageIcon("images/mine.png"),
+			new ImageIcon("images/mine_click.png")
+	};
+
+	public static ImageIcon[] ICONS_REVEALED = {		
 			new ImageIcon("images/m0.png"),
 			new ImageIcon("images/m1.png"),
 			new ImageIcon("images/m2.png"),
@@ -37,7 +44,7 @@ public class CellButton extends JButton {
 	};
 
 	public CellButton(int row, int col ) {
-		this (row, col, ICONS[0]);
+		this (row, col, ICONS_COVERED[0]);
 	}
 	
 	public CellButton(int row, int col, ImageIcon icon) {
@@ -54,14 +61,33 @@ public class CellButton extends JButton {
 	public int getRow() {
 		return this.row;
 	}
+	
+	
+	/**
+	 * 
+	 * @param cover
+	 * @param under
+	 */
+	public void updateIcon(int cover, int under) {
+		if(cover > 0 ) {
+			setIcon(ICONS_COVERED[cover]);
+		} else if (under > 0){
+			setIcon(ICONS_REVEALED[under]);
+		} else if (under == Constants.SHOW_MINE) {
+			setIcon(ICONS_MINES[0]);
+		} else if(under ==  Constants.SHOW_MINE_FIRED) {
+			setIcon(ICONS_MINES[0]);
+		}
+	}
+	
 	/**
 	 * just for testing, 
 	 * rotate all possible images
 	 */
 	public void changeIcon() {
 		iconIndex++; 
-		if(iconIndex >= ICONS.length) 
+		if(iconIndex >= ICONS_REVEALED.length) 
 			iconIndex = 0; 
-		setIcon(ICONS[iconIndex]);
+		setIcon(ICONS_REVEALED[iconIndex]);
 	}
 }

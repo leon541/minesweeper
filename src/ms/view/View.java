@@ -32,7 +32,8 @@ public interface View {
 	 * @param row  
 	 * @param col
  	 * @param cover   (0: uncovered, 1: cover, 2: flag, 3: ? )
-	 * @param under   (-1: mine, 0 - 8: number of mines, 9: mine fired)  
+	 * @param under   (-1: mine, 0 - 8: number of mines, )  
+	 * 				   -2: mine fired	
 	 * @return   0: init 
 	 *           1: undergoing
 	 *           2: win
