@@ -7,26 +7,26 @@ package ms;
 public class Constants {
 	
 	/**
-	 *  passed from View to Controllor
+	 *  passed from View to Controller
 	 */
 	public static final int CLICK_TYPE_LEFT = 1; 
-	public static final int CLICK_TYPE_RIHGT = 2;
+	public static final int CLICK_TYPE_RIGHT = 2;
 	public static final int CLICK_TYPE_BOTH = 3;
 	
 	/**
 	 *  return from click. 	
 	 */
-	public static final int GAME_STATUS_READY = 0 ; 
-	public static final int GAME_STATUS_ONGOING = 1 ;
-	public static final int GAME_STATUS_WIN = 2 ;
-	public static final int GAME_STATUS_LOSE  = 2 ;
+	public static final int GAME_STATUS_READY = 0; 
+	public static final int GAME_STATUS_ONGOING = 1;
+	public static final int GAME_STATUS_WIN = 2;
+	public static final int GAME_STATUS_LOSE = 3;
 	
 	/**
 	 * passed from Controller to view for cover
 	 */
 	public static final int FLAG_TYPE_NONE = 0; 
 	public static final int FLAG_TYPE_RED = 1;
-	public static final int FLAG_TYPE_QUESTION = 2 ;
+	public static final int FLAG_TYPE_QUESTION = 2;
 
 	
 	/**
