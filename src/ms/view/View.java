@@ -27,7 +27,7 @@ public interface View {
 	public void init(int level);
 		
 	/**
-	 *  update cell, interface to Controller 
+	 *  update cell image, used by Controller 
 	 * 
 	 * @param row  
 	 * @param col
@@ -39,6 +39,15 @@ public interface View {
 	 *           3: lose
 	 */
 	public int updateCell(int row, int col, int cover, int under);
+	
+	
+	
+	/**
+	 * update counter value, used by Controller
+	 * @param numberOfMines
+	 */
+	public void updateCounter(int numberOfMines);
+	
 	/**
 	 * 
 	 * @param controller

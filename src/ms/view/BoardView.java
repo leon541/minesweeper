@@ -3,6 +3,7 @@
  */
 package ms.view;
 
+import ms.Constants;
 import ms.controller.Controller;
 
 import java.awt.BorderLayout;
@@ -32,9 +33,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final int LEVEL_EASY  = 1; 
-	private static final int LEVEL_MEDIUM  = 2;
-	private static final int LEVEL_HARD  = 3;
+
 
 	private final int CELL_SIZE = 25;
 
@@ -48,6 +47,8 @@ public class BoardView implements View, MouseListener, ActionListener {
 	int faceIndex = 0; 
 	
 	private JFrame mainFrame; // main window
+	private Counter numberOfMines; 
+	private Counter timer; 
 	Controller controller;
 
 	/**
@@ -67,7 +68,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 	 * default view 
 	 */
 	public BoardView() {
-		this(LEVEL_EASY);  // should use marcos
+		this(Constants.LEVEL_BEGINNER);  // should use marcos
 	}
 
 	/**
@@ -222,13 +223,13 @@ public class BoardView implements View, MouseListener, ActionListener {
 	public void init(int level) {
 		// TODO Auto-generated method stub
 		switch (level) {
-		case LEVEL_EASY: 
+		case Constants.LEVEL_BEGINNER: 
 			init(level, 9, 9, 10);
 			break;
-		case LEVEL_MEDIUM:
+		case Constants.LEVEL_INTERMEDIATE:
 			init(level, 16, 16, 40);
 			break; 
-		case LEVEL_HARD:
+		case Constants.LEVEL_EXPERT:
 			init(level, 16, 30, 99);
 			break;
 		}
@@ -268,39 +269,39 @@ public class BoardView implements View, MouseListener, ActionListener {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menuLevels = new JMenu("Levels");
 
-		JRadioButtonMenuItem levelEasy = new JRadioButtonMenuItem ("Easy"); // for dispaly
-		levelEasy.setName("Easy"); // for action ID
+		JRadioButtonMenuItem levelBeginner = new JRadioButtonMenuItem ("Beginner"); // for dispaly
+		levelBeginner.setName("Beginner"); // for action ID
 
-		JRadioButtonMenuItem levelMedium  = new JRadioButtonMenuItem ("Medium");
-		levelMedium.setName("Medium");
-		JRadioButtonMenuItem levelHard  = new JRadioButtonMenuItem ("Hard");
-		levelHard.setName("Hard"); 
+		JRadioButtonMenuItem levelInterMediate  = new JRadioButtonMenuItem ("InterMediate");
+		levelInterMediate.setName("InterMediate");
+		JRadioButtonMenuItem levelExpert  = new JRadioButtonMenuItem ("Expert");
+		levelExpert.setName("Expert"); 
 
 		ButtonGroup btnGroup = new ButtonGroup();
 
-		btnGroup.add(levelEasy);
-		btnGroup.add(levelMedium);
-		btnGroup.add(levelHard);
+		btnGroup.add(levelBeginner);
+		btnGroup.add(levelInterMediate);
+		btnGroup.add(levelExpert);
 
 		switch (level) {
-		case LEVEL_EASY: 
-			levelEasy.setSelected(true);
+		case Constants.LEVEL_BEGINNER: 
+			levelBeginner.setSelected(true);
 			break;
-		case LEVEL_MEDIUM:
-			levelMedium.setSelected(true);
+		case Constants.LEVEL_INTERMEDIATE:
+			levelInterMediate.setSelected(true);
 			break; 
-		case LEVEL_HARD:
-			levelHard.setSelected(true);
+		case Constants.LEVEL_EXPERT:
+			levelExpert.setSelected(true);
 			break;
 		}
 
-		levelEasy.addActionListener(this);
-		levelMedium.addActionListener(this);
-		levelHard.addActionListener(this);
+		levelBeginner.addActionListener(this);
+		levelInterMediate.addActionListener(this);
+		levelExpert.addActionListener(this);
 
-		menuLevels.add(levelEasy);
-		menuLevels.add(levelMedium);
-		menuLevels.add(levelHard);
+		menuLevels.add(levelBeginner);
+		menuLevels.add(levelInterMediate);
+		menuLevels.add(levelExpert);
 
 		menuBar.add(menuLevels);
 		return menuBar;
@@ -310,15 +311,15 @@ public class BoardView implements View, MouseListener, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() instanceof JRadioButtonMenuItem) {  // leve in the menu
-			if ( ((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Easy") != -1) {
-				System.out.println("easy");
-				init(LEVEL_EASY);
-			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Medium") != -1) {
-				System.out.println("Medium");
-				init(LEVEL_MEDIUM);
-			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Hard") != -1) {
-				System.out.println("Hard");
-				init(LEVEL_HARD);
+			if ( ((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Beginner") != -1) {
+				System.out.println("Beginner");
+				init(Constants.LEVEL_BEGINNER);
+			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("InterMediate") != -1) {
+				System.out.println("InterMediate");
+				init(Constants.LEVEL_INTERMEDIATE);
+			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Expert") != -1) {
+				System.out.println("Expert");
+				init(Constants.LEVEL_EXPERT);
 			}
 		} else if(e.getSource() instanceof JButton) {
 			 if(++faceIndex == ICON_FACES.length)
@@ -326,6 +327,12 @@ public class BoardView implements View, MouseListener, ActionListener {
 			resetButton.setIcon(ICON_FACES[faceIndex]);
 			System.out.println("reset");
 		}
+	}
+
+	@Override
+	public void updateCounter(int numberOfMines) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
