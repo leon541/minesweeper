@@ -1,5 +1,7 @@
 package ms.controller;
 
+import ms.view.View;
+
 public interface Controller {
 	/**
 	 * 
@@ -24,4 +26,9 @@ public interface Controller {
 	 * 
 	 */
 	void start();
+	
+	/**
+	 * 
+	 */
+	void setView(View view);
 }

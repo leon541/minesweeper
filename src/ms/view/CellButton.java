@@ -21,9 +21,10 @@ public class CellButton extends JButton {
 	private int iconIndex; 
 	
 	public static ImageIcon [] ICONS_COVERED = {
-			new ImageIcon("images/blank.png"),
-			new ImageIcon("images/flag.png"),
-			new ImageIcon("images/unknown.png"),
+			new ImageIcon("images/blank.png"),  //
+			new ImageIcon("images/blank.png"),  // 1 
+			new ImageIcon("images/flag.png"),   // 2
+			new ImageIcon("images/unknown.png"), // 3
 	};
 
 	public static ImageIcon[] ICONS_MINES = {
@@ -76,7 +77,7 @@ public class CellButton extends JButton {
 		} else if (under == Constants.SHOW_MINE) {
 			setIcon(ICONS_MINES[0]);
 		} else if(under ==  Constants.SHOW_MINE_FIRED) {
-			setIcon(ICONS_MINES[0]);
+			setIcon(ICONS_MINES[1]);
 		}
 	}
 	

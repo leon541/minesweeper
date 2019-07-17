@@ -165,7 +165,9 @@ public class BoardView implements View, MouseListener, ActionListener {
 	public void mousePressed(MouseEvent e) {
 		if( e.getSource() instanceof CellButton ) {
 			CellButton gridButton = (CellButton) e.getSource();
-
+			int row = gridButton.getRow();
+			int col = gridButton.getCol();
+			
 			if(e.getButton() == MouseEvent.BUTTON1 && !keys[0]){
 				keys[0] = true;
 			}
@@ -173,7 +175,8 @@ public class BoardView implements View, MouseListener, ActionListener {
 				keys[1] = true;
 			}
 			if(keys[0] && keys[1] ){
-				System.out.println("Button: " + gridButton.getRow() + ","+ gridButton.getCol() +" Left+ right");
+				System.out.println("Left + Right Pressed:");
+				this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_BOTH);
 			}
 		}
 
@@ -183,18 +186,21 @@ public class BoardView implements View, MouseListener, ActionListener {
 		// TODO Auto-generated method stub
 		if( e.getSource() instanceof CellButton ) {
 			CellButton gridButton = (CellButton) e.getSource();
-			System.out.println("Button release: " + gridButton.getRow() + "," + gridButton.getCol());
+			int row = gridButton.getRow();
+			int col = gridButton.getCol();
+
 			if(keys[0] && !keys[1] ){
-				System.out.println(" left "); //  only left
-				gridButton.changeIcon();
+				System.out.println("Left Button release: " + row + "," + col);
+				this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_LEFT);
 				keys[0] = false;
 			}
 			if(!keys[0]  && keys[1] ){
-				System.out.println(" right"); // only right
+				System.out.println("Right Button release: " + row + "," + col);
+				this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_RIGHT);
 				keys[1] = false;
 			}
 			if(keys[0] && keys[1]){
-				System.out.println("Left+ right released!");
+				System.out.println("Right + Left Button release: " + row + "," + col);
 				keys[0] = false;
 				keys[1] = false;
 			}
