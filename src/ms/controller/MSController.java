@@ -11,6 +11,21 @@ public class MSController implements Controller {
 	Minefield board;
 	private int gameStatus;
 	
+	public MSController() {
+		int[] base = Constants.LEVEL_PARAMETERS[Constants.LEVEL_INTERMEDIATE];
+		configure(base[0], base[1], base[2]);
+	}
+	
+	public MSController(int level) {
+		try {
+			int[] base = Constants.LEVEL_PARAMETERS[level];
+			configure(base[0], base[1], base[2]);
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+	}
+	
 	public void setView(View view) {
 		this.view = view; 
 	}
