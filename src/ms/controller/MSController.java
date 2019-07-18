@@ -95,7 +95,7 @@ public class MSController implements Controller {
 				if(vfcValue != Constants.CELL_TYPE_REVEAL) {
 				    vfcValue = (vfcValue % 3) + 1;
 					board.setVisibleValue(row, col, vfcValue);
-					view.updateCell(row, col, Constants.CELL_TYPE_REVEAL, 0);
+					view.updateCell(row, col, vfcValue, 0);
 				}
 			}
 			else if(type == Constants.CLICK_TYPE_BOTH && vfcValue == Constants.CELL_TYPE_REVEAL) {
