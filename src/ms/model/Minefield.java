@@ -1,5 +1,8 @@
 package ms.model;
 import java.util.Arrays;
+
+import ms.Constants;
+
 import java.lang.Math;
 import java.lang.String;
 import java.lang.Exception;
@@ -26,7 +29,7 @@ public class Minefield{
 		visible_field = new int[rows][columns];
 		bomb_field = new int[rows][columns];
 		
-		generateField();
+		resetField();
 	}
 	
 	public Minefield(Minefield m){
@@ -59,27 +62,28 @@ public class Minefield{
 		generateField();
 	}
 	*/
-	public Minefield(String dif){
+	public Minefield(int level){
 		try{
-			switch(Difficulty.valueOf(dif.toUpperCase().trim())){
-				case BEGINNER: rows = 9;
-							   columns = 9;
-							   numBombs = 10;
-							   break;
-				case INTERMEDIATE: rows = 16;
-								   columns = 16;
-								   numBombs = 40;
-								   break;
-				case EXPERT: rows = 16;
-							 columns = 30;
-							 numBombs = 99;
-							 break;
+			switch(level){
+				case Constants.LEVEL_BEGINNER: rows = 9;
+											   columns = 9;
+											   numBombs = 10;
+											   break;
+				case Constants.LEVEL_INTERMEDIATE: rows = 16;
+								   				   columns = 16;
+								   				   numBombs = 40;
+								   				   break;
+				case Constants.LEVEL_EXPERT: rows = 16;
+							 				 columns = 30;
+							 				 numBombs = 99;
+							 				 break;
+				default: throw new IllegalArgumentException("Not a valid difficulty setting.");
 			}
 			
 			visible_field = new int[rows][columns];
 			bomb_field = new int[rows][columns];
 			
-			generateField();
+			resetField();
 		}
 		catch(IllegalArgumentException e){
 			System.out.println("Illegal Difficulty Setting.\n" + e.getMessage());
@@ -93,6 +97,7 @@ public class Minefield{
 		numBombs = (2 * round(root)) - 8);
 	}
 	*/
+	
 	private void generateField(){
 		numFlags = numBombs;
 		gameover = mine_found = false;
@@ -140,22 +145,46 @@ public class Minefield{
 	}
 	
 	public int getRows(){ return rows; }
+	public void setRows(int rows) { this.rows = rows;}
+	
 	public int getColumns() { return columns; }
+	public void setColumns(int columns) { this.columns = columns; }
+	
 	public int getNumFlags() { return numFlags; }
+	public void setNumFlags(int numFlags) { this.numFlags = numFlags; }
+	
 	public int getNumBombs() { return numBombs; }
+	public void setNumBombs(int numBombs) { this.numBombs = numBombs; }
+	
 	public boolean isGameOver() { return gameover; }
+	public void gameOver() { gameover = true; }
+	
 	public boolean isMineFound() { return mine_found; }
+	public void mineFound() { mine_found = true; }
 	
 	public int[][] getVisibleField() { return visible_field; }
 	public int[][] getBombField() { return bomb_field; }
+	
+	public void placedFlag() { numFlags--; }
+	public void removedFlag() { numFlags++; }
 	
 	public int getVisibleValue(int x, int y){
 		try{
 			return visible_field[x][y];
 		}
-		catch(ArrayIndexOutOfBoundsException e){
+		catch(Exception e){
 			System.out.println(e.getMessage());
-			return 1;
+			return -1;
+		}
+	}
+	
+	public int setVisibleValue(int x, int y, int visibility){
+		try{
+			if (visibility < Constants.CELL_TYPE_REVEAL || visibility > Constants.CELL_TYPE_QUESTION)
+				throw new IllegalArgumentException("Error: unknown cell visibility type value of " + visibility + ".");
+			
+			visible_field[x][y] = visibility;
+			return 0;
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
@@ -177,10 +206,36 @@ public class Minefield{
 		}
 	}
 	
+	public int setMineValue(int x, int y, int mine_value){
+		try{
+			if (mine_value < Constants.SHOW_MINE || mine_value > 8)
+				throw new IllegalArgumentException("Error: unknown mine cell type value of " + mine_value + ".");
+			
+			bomb_field[x][y] = mine_value;
+			return 0;
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+			return -1;
+		}
+	}
+	
+	public void resetField() {
+		numFlags = numBombs;
+		gameover = mine_found = false;
+		
+		for(int a = 0; a < rows; a++){
+			Arrays.fill(visible_field[a], Constants.CELL_TYPE_HIDDEN);
+			Arrays.fill(bomb_field[a],0);
+		}
+	}
+	/*
 	public void resetGame(){
 		generateField();
 	}
-	
+	*/
+
+	/*
 	public void reveal(int x, int y){
 		if ( gameover ) { return; }
 		
@@ -212,7 +267,8 @@ public class Minefield{
 		if(mine_found || minesLastStanding())
 			gameover = true;
 	}
-	
+	*/
+	/*
 	public void toggleFlag(int x, int y){
 		if ( gameover ) { return; }
 		
@@ -276,8 +332,8 @@ public class Minefield{
 			}
 		}
 	}
-	
-	private boolean minesLastStanding(){
+*/	
+	public boolean minesLastStanding(){
 		int numLeft = 0;
 		
 		for(int[] row : visible_field){
@@ -293,7 +349,7 @@ public class Minefield{
 		
 		return true;
 	}
-	
+/*	
 	private void mineReveal(){
 		if(!mine_found) { return; }
 		
@@ -312,4 +368,5 @@ public class Minefield{
 			}
 		}
 	}
+*/
 }

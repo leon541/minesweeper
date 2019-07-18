@@ -24,9 +24,10 @@ public class Constants {
 	/**
 	 * passed from Controller to view for cover
 	 */
-	public static final int FLAG_TYPE_NONE = 0; 
-	public static final int FLAG_TYPE_RED = 1;
-	public static final int FLAG_TYPE_QUESTION = 2;
+	public static final int CELL_TYPE_REVEAL = 0;
+	public static final int CELL_TYPE_HIDDEN = 1; 
+	public static final int CELL_TYPE_FLAG = 2;
+	public static final int CELL_TYPE_QUESTION = 3;
 
 	
 	/**
