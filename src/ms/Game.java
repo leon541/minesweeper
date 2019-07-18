@@ -24,7 +24,8 @@ public class Game {
 	}
 	
 	public Game() {
-		controller = new DummyController();
+		//controller = new DummyController();
+		controller = new MSController();
 		view = new BoardView();
 		view.setController(controller);
 		

@@ -117,45 +117,41 @@
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="21">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="7"/>  
-  </dependency>  
-  <association id="22">    
+  <association id="21">    
     <bendpoint x="482" y="556"/>    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="23" name="timer">        
+      <attribute id="22" name="timer">        
         <position height="0" width="0" x="-38" y="3"/>      
       </attribute>      
-      <multiplicity id="24" minimum="0" maximum="1">        
+      <multiplicity id="23" minimum="0" maximum="1">        
         <position height="0" width="0" x="-38" y="3"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <realization id="25">    
+  <realization id="24">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="5"/>  
   </realization>  
-  <association id="26">    
+  <association id="25">    
     <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="27" name="view">        
+      <attribute id="26" name="view">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="28" minimum="0" maximum="1">        
+      <multiplicity id="27" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="29">    
+  <association id="28">    
     <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="30" name="controller">        
+      <attribute id="29" name="controller">        
         <position height="0" width="0" x="522" y="-112"/>      
       </attribute>      
-      <multiplicity id="31" minimum="0" maximum="1">        
+      <multiplicity id="30" minimum="0" maximum="1">        
         <position height="0" width="0" x="522" y="-112"/>      
       </multiplicity>    
     </end>    

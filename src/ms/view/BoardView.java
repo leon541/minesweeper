@@ -38,9 +38,10 @@ public class BoardView implements View, MouseListener, ActionListener {
 	private final int CELL_SIZE = 25;
 
 	public static ImageIcon [] ICON_FACES = { 
-			new ImageIcon("images/facesmile.png"),
-			new ImageIcon("images/facewin.png"),
-			new ImageIcon("images/facelose.png")
+			new ImageIcon("images/facesmile.png"), // 0
+			new ImageIcon("images/facesmile.png"), // 1
+			new ImageIcon("images/facewin.png"),  // 2
+			new ImageIcon("images/facelose.png")   // 3
 	};
 	
 	// temp;
@@ -176,7 +177,9 @@ public class BoardView implements View, MouseListener, ActionListener {
 			}
 			if(keys[0] && keys[1] ){
 				System.out.println("Left + Right Pressed:");
-				this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_BOTH);
+				
+				int clickResult = this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_BOTH);
+				handleClickResult(clickResult);
 			}
 		}
 
@@ -191,7 +194,8 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 			if(keys[0] && !keys[1] ){
 				System.out.println("Left Button release: " + row + "," + col);
-				this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_LEFT);
+				int clickResult = controller.clickedGrid(row, col, Constants.CLICK_TYPE_LEFT);
+				handleClickResult(clickResult);
 				keys[0] = false;
 			}
 			if(!keys[0]  && keys[1] ){
@@ -340,5 +344,11 @@ public class BoardView implements View, MouseListener, ActionListener {
 		// TODO Auto-generated method stub
 		
 	}
-
+	private void handleClickResult(int result) {
+		if(result == Constants.GAME_STATUS_LOSE) {  // 3
+			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_LOSE]);
+		} else if(result == Constants.GAME_STATUS_WIN) { // 2
+			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_WIN]);
+		}
+	}
 }
