@@ -69,7 +69,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 	 * default view 
 	 */
 	public BoardView() {
-		this(Constants.LEVEL_BEGINNER);  // should use marcos
+		this(Constants.LEVEL_INTERMEDIATE);  // should use marcos
 	}
 
 	/**
