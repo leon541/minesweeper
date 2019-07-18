@@ -192,7 +192,7 @@ public class MSController implements Controller {
 				view.updateCell(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL, mfcValue);
 				
 				if(mfcValue == 0)
-					blankReveal(x, y);
+					blankReveal(x_neighbor, y_neighbor);
 			}
 		}
 		
