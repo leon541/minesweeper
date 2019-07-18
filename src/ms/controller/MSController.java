@@ -56,7 +56,7 @@ public class MSController implements Controller {
 				
 				switch(vfcValue) {
 				case Constants.CELL_TYPE_FLAG: board.removedFlag();
-											   view.updateCounter(board.getNumFlags());
+											   //view.updateCounter(board.getNumFlags());
 				default: board.setVisibleValue(row, col, Constants.CELL_TYPE_REVEAL);
 				}
 				
@@ -82,14 +82,14 @@ public class MSController implements Controller {
 												     vfcValue++;
 												 else {
 												     board.placedFlag();
-													 view.updateCounter(board.getNumFlags());
+													 //view.updateCounter(board.getNumFlags());
 												 }
 				                                 break;
 				case Constants.CELL_TYPE_FLAG: if(board.getNumFlags() == board.getNumBombs())
 					                               throw new IllegalStateException("Error: Flag state is incorrect - no flags should be on the board.");
 											  
 											   board.removedFlag();
-											   view.updateCounter(board.getNumFlags());
+											   //view.updateCounter(board.getNumFlags());
 				}
 				
 				if(vfcValue != Constants.CELL_TYPE_REVEAL) {
@@ -123,7 +123,7 @@ public class MSController implements Controller {
 			board = new Minefield(rows, cols, mines);
 		else
 			board.resetField();
-		view.updateCounter(board.getNumFlags());
+		//view.updateCounter(board.getNumFlags());
 		generateField();
 	}
 
@@ -164,7 +164,8 @@ public class MSController implements Controller {
 		    y_neighbor = 0,
 		    rows = board.getRows(),
 		    columns = board.getColumns(),
-		    vfcValue = 0;
+		    vfcValue = 0,
+		    mfcValue = 0;
 		
 		for (x_neighbor = x - 1; x_neighbor < x + 2; x_neighbor++){
 			if (x_neighbor == rows)
@@ -179,22 +180,23 @@ public class MSController implements Controller {
 					continue;
 				
 				vfcValue = board.getVisibleValue(x_neighbor, y_neighbor);
+				mfcValue = board.getMineValue(x_neighbor, y_neighbor);
 				
 				if(vfcValue == Constants.CELL_TYPE_REVEAL)
 					continue;
 				else if(vfcValue == Constants.CELL_TYPE_FLAG) {
 					board.removedFlag();
 				}
-				
+								
 				board.setVisibleValue(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL);
-				view.updateCell(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL, 0);
+				view.updateCell(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL, mfcValue);
 				
-				if(board.getMineValue(x_neighbor, y_neighbor) == 0)
+				if(mfcValue == 0)
 					blankReveal(x, y);
 			}
 		}
 		
-		view.updateCounter(board.getNumFlags());
+		//view.updateCounter(board.getNumFlags());
 	}
 	
 	private void areaReveal(int x, int y) {
