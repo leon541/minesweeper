@@ -72,7 +72,7 @@ public class CellButton extends JButton {
 	public void updateIcon(int cover, int under) {
 		if(cover > 0 ) {
 			setIcon(ICONS_COVERED[cover]);
-		} else if (under > 0){
+		} else if (under >= 0){
 			setIcon(ICONS_REVEALED[under]);
 		} else if (under == Constants.SHOW_MINE) {
 			setIcon(ICONS_MINES[0]);
