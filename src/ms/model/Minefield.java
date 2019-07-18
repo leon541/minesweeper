@@ -54,6 +54,9 @@ public class Minefield{
 		this.rows = rows;
 		this.numBombs = numBombs;
 		
+		visible_field = new int[rows][columns];
+		mine_field = new int[rows][columns];
+		
 		resetField();
 	}
 /*
