@@ -9,6 +9,7 @@ public class MSController implements Controller {
 
 	View view;
 	Minefield board;
+	private int gameStatus;
 	
 	public void setView(View view) {
 		this.view = view; 
@@ -17,8 +18,9 @@ public class MSController implements Controller {
 	@Override
 	public int clickedGrid(int row, int col, int type) {
 		// TODO Auto-generated method stub
-		if ( board.isGameOver() )
-			return 1;
+		if ( gameStatus > Constants.GAME_STATUS_ONGOING ) {
+			return gameStatus;
+		}
 		
 		int vfcValue = 0;
 		
@@ -48,6 +50,7 @@ public class MSController implements Controller {
 				switch(mfcValue) {
 				case Constants.SHOW_MINE: board.mineFound();
 				                          mineReveal();
+				                          gameStatus = Constants.GAME_STATUS_LOSE;
 				                          mfcValue--;
 				                          break;
 				case 0: blankReveal(row, col);
@@ -83,8 +86,6 @@ public class MSController implements Controller {
 			else if(type == Constants.CLICK_TYPE_BOTH && vfcValue == Constants.CELL_TYPE_REVEAL) {
 				areaReveal(row, col);
 			}
-			else
-				return 1;
 			
 		}
 		catch(Exception e){
@@ -92,7 +93,12 @@ public class MSController implements Controller {
 			return -1;
 		}
 		
-		return 0;
+		if(board.isGameOver() && gameStatus != Constants.GAME_STATUS_LOSE)
+			gameStatus = Constants.GAME_STATUS_WIN;
+		else if(gameStatus == Constants.GAME_STATUS_READY)
+			gameStatus = Constants.GAME_STATUS_ONGOING;
+		
+		return gameStatus;
 	}
 
 	@Override
@@ -109,6 +115,7 @@ public class MSController implements Controller {
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
+		gameStatus = Constants.GAME_STATUS_READY;
 	}
 	
 	private int mineReveal(){
@@ -206,6 +213,7 @@ public class MSController implements Controller {
 				switch(mfcValue) {
 				case Constants.SHOW_MINE: board.mineFound();
 										  mineReveal();
+										  gameStatus = Constants.GAME_STATUS_LOSE;
 										  mfcValue--;
 										  break;
 				case 0: blankReveal(x_neighbor, y_neighbor);
