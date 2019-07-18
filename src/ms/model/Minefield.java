@@ -2,16 +2,15 @@ package ms.model;
 import java.util.Arrays;
 
 import ms.Constants;
-
+import java.lang.Enum;
 import java.lang.Math;
-import java.lang.String;
 import java.lang.Exception;
 
 public class Minefield{	
-	private enum Difficulty { BEGINNER, INTERMEDIATE, EXPERT; }
+	//private enum Difficulty { BEGINNER, INTERMEDIATE, EXPERT; }
 
 	private int[][] visible_field;
-	private int[][] bomb_field;
+	private int[][] mine_field;
 	
 	private int columns;
 	private int rows;
@@ -27,7 +26,7 @@ public class Minefield{
 	    numBombs = 10;
 		
 		visible_field = new int[rows][columns];
-		bomb_field = new int[rows][columns];
+		mine_field = new int[rows][columns];
 		
 		resetField();
 	}
@@ -37,11 +36,11 @@ public class Minefield{
 		this.rows = m.rows;
 		
 		this.visible_field = new int[rows][columns];
-		this.bomb_field = new int[rows][columns];
+		this.mine_field = new int[rows][columns];
 		
 		for (int r = 0; r < rows; r++){
 			this.visible_field[r] = Arrays.copyOf(m.visible_field[r], columns);
-			this.bomb_field[r] = Arrays.copyOf(m.bomb_field[r], columns);
+			this.mine_field[r] = Arrays.copyOf(m.mine_field[r], columns);
 		}
 		
 		this.numBombs = m.numBombs;
@@ -49,19 +48,24 @@ public class Minefield{
 		this.gameover = m.gameover;
 		this.mine_found = m.mine_found;
 	}
-	/*
+	
+	public Minefield(int rows, int columns, int numBombs){
+		this.columns = columns;
+		this.rows = rows;
+		this.numBombs = numBombs;
+		
+		resetField();
+	}
+/*
 	public Minefield(int rows, int columns){
 		this.columns = columns;
 		this.rows = rows;
 		
 		calcNumBombs();
-		
-		visible_field = new int[rows][columns];
-		bomb_field = new int[rows][columns];
-		
-		generateField();
+		resetField();
 	}
-	*/
+ */
+	
 	public Minefield(int level){
 		try{
 			switch(level){
@@ -81,7 +85,7 @@ public class Minefield{
 			}
 			
 			visible_field = new int[rows][columns];
-			bomb_field = new int[rows][columns];
+			mine_field = new int[rows][columns];
 			
 			resetField();
 		}
@@ -96,7 +100,7 @@ public class Minefield{
 		double root = sqrt(cells)
 		numBombs = (2 * round(root)) - 8);
 	}
-	*/
+	
 	
 	private void generateField(){
 		numFlags = numBombs;
@@ -111,20 +115,20 @@ public class Minefield{
 		
 		for(int a = 0; a < rows; a++){
 			Arrays.fill(visible_field[a],1);
-			Arrays.fill(bomb_field[a],0);
+			Arrays.fill(mine_field[a],0);
 		}
 		
 		for (int bombloc: bombs) {
 			x = bombloc / rows;
 			y = bombloc % rows;
 			
-			while (bomb_field[x][y] == -1){
+			while (mine_field[x][y] == -1){
 				bombloc = (int) Math.floor((Math.random() * (rows * columns)));
 				x = bombloc / rows;
 				y = bombloc % rows;
 			}
 			
-			bomb_field[x][y] = -1;
+			mine_field[x][y] = -1;
 			
 			for (x_neighbor = x - 1; x_neighbor < x + 2; x_neighbor++){
 				if (x_neighbor == rows)
@@ -135,15 +139,15 @@ public class Minefield{
 				for (y_neighbor = y - 1; y_neighbor < y + 2; y_neighbor++){
 					if(y_neighbor == columns)
 						break;
-					if(y_neighbor < 0 || bomb_field[x_neighbor][y_neighbor] == -1)
+					if(y_neighbor < 0 || mine_field[x_neighbor][y_neighbor] == -1)
 						continue;
 					
-					bomb_field[x_neighbor][y_neighbor]++;
+					mine_field[x_neighbor][y_neighbor]++;
 				}
 			}
 		}
 	}
-	
+	*/
 	public int getRows(){ return rows; }
 	public void setRows(int rows) { this.rows = rows;}
 	
@@ -163,7 +167,7 @@ public class Minefield{
 	public void mineFound() { mine_found = true; }
 	
 	public int[][] getVisibleField() { return visible_field; }
-	public int[][] getBombField() { return bomb_field; }
+	public int[][] getMineField() { return mine_field; }
 	
 	public void placedFlag() { numFlags--; }
 	public void removedFlag() { numFlags++; }
@@ -194,7 +198,7 @@ public class Minefield{
 	
 	public int getMineValue(int x, int y){
 		try{
-			return bomb_field[x][y];
+			return mine_field[x][y];
 		}
 		catch(ArrayIndexOutOfBoundsException e){
 			System.out.println(e.getMessage());
@@ -211,7 +215,7 @@ public class Minefield{
 			if (mine_value < Constants.SHOW_MINE || mine_value > 8)
 				throw new IllegalArgumentException("Error: unknown mine cell type value of " + mine_value + ".");
 			
-			bomb_field[x][y] = mine_value;
+			mine_field[x][y] = mine_value;
 			return 0;
 		}
 		catch(Exception e){
@@ -226,7 +230,7 @@ public class Minefield{
 		
 		for(int a = 0; a < rows; a++){
 			Arrays.fill(visible_field[a], Constants.CELL_TYPE_HIDDEN);
-			Arrays.fill(bomb_field[a],0);
+			Arrays.fill(mine_field[a],0);
 		}
 	}
 	/*
@@ -257,7 +261,7 @@ public class Minefield{
 		
 		visible_field[x][y] = 0;
 		
-		switch(bomb_field[x][y]){
+		switch(mine_field[x][y]){
 			case -1: mine_found = true;
 					 mineReveal();
 					 break;
@@ -327,7 +331,7 @@ public class Minefield{
 				
 				visible_field[x_neighbor][y_neighbor] = 0;
 				
-				if(bomb_field[x_neighbor][y_neighbor] == 0)
+				if(mine_field[x_neighbor][y_neighbor] == 0)
 					blankReveal(x, y);
 			}
 		}
@@ -357,7 +361,7 @@ public class Minefield{
 		
 		for(int r = 0; r < rows; r++){
 			for(int c = 0; c < columns; c++){
-				if(bomb_field[r][c] != -1)
+				if(mine_field[r][c] != -1)
 					continue;
 				
 				visible_field[r][c] = 0;

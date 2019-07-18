@@ -98,13 +98,17 @@ public class MSController implements Controller {
 	@Override
 	public void configure(int rows, int cols, int mines) {
 		// TODO Auto-generated method stub
-		
+		if(board == null || board.getRows() != rows || board.getColumns() != cols || board.getNumBombs() != mines)
+			board = new Minefield(rows, cols, mines);
+		else
+			board.resetField();
+		view.updateCounter(board.getNumFlags());
+		generateField();
 	}
 
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	private int mineReveal(){
@@ -213,5 +217,56 @@ public class MSController implements Controller {
 		
 		if(board.isMineFound() || board.minesLastStanding())
 			board.gameOver();
+	}
+	
+	private void generateField() {
+		int x = 0,
+		    y = 0,
+		    rows = board.getRows(),
+		    columns = board.getColumns(),
+		    x_neighbor = 0,
+		    y_neighbor = 0,
+		    numBombs = board.getNumBombs(),
+		    mfcValue = 0;
+		
+		int[] bombs = new int[numBombs];	
+		
+		for(int b = 0; b < numBombs; b++){
+			bombs[b] = (int) Math.floor((Math.random() * (rows * columns)));
+		}
+		
+		for (int bombloc: bombs) {
+			x = bombloc / rows;
+			y = bombloc % rows;
+			
+			while (board.getMineValue(x, y) == Constants.SHOW_MINE){
+				bombloc = (int) Math.floor((Math.random() * (rows * columns)));
+				x = bombloc / rows;
+				y = bombloc % rows;
+			}
+			
+			board.setMineValue(x, y, Constants.SHOW_MINE);
+			
+			for (x_neighbor = x - 1; x_neighbor < x + 2; x_neighbor++){
+				if (x_neighbor == rows)
+					break;
+				if (x_neighbor < 0)
+					continue;
+				
+				for (y_neighbor = y - 1; y_neighbor < y + 2; y_neighbor++){
+					if(y_neighbor == columns)
+						break;
+					if(y_neighbor < 0)
+						continue;
+					
+					mfcValue = board.getMineValue(x_neighbor, y_neighbor);
+					
+					if(mfcValue == Constants.SHOW_MINE)
+						continue;
+					
+					board.setMineValue(x_neighbor, y_neighbor, mfcValue + 1);
+				}
+			}
+		}
 	}
 }

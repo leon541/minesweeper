@@ -268,6 +268,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 		mainFrame.setResizable(false);
 
 		mainFrame.setVisible(true);
+		controller.configure(rows, cols, mines);
 
 	}
 
