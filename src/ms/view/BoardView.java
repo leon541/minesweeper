@@ -69,7 +69,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 	 * default view 
 	 */
 	public BoardView() {
-		this(Constants.LEVEL_BEGINNER);  // should use marcos
+		this(Constants.LEVEL_INTERMEDIATE);  // should use marcos
 	}
 
 	/**
@@ -268,7 +268,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 		mainFrame.setResizable(false);
 
 		mainFrame.setVisible(true);
-		controller.configure(rows, cols, mines);
+		//controller.configure(rows, cols, mines);
 
 	}
 

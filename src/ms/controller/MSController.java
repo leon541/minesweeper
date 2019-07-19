@@ -9,6 +9,22 @@ public class MSController implements Controller {
 
 	View view;
 	Minefield board;
+	private int gameStatus;
+	
+	public MSController() {
+		int[] base = Constants.LEVEL_PARAMETERS[Constants.LEVEL_INTERMEDIATE];
+		configure(base[0], base[1], base[2]);
+	}
+	
+	public MSController(int level) {
+		try {
+			int[] base = Constants.LEVEL_PARAMETERS[level];
+			configure(base[0], base[1], base[2]);
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+	}
 	
 	public void setView(View view) {
 		this.view = view; 
@@ -17,8 +33,9 @@ public class MSController implements Controller {
 	@Override
 	public int clickedGrid(int row, int col, int type) {
 		// TODO Auto-generated method stub
-		if ( board.isGameOver() )
-			return 1;
+		if ( gameStatus > Constants.GAME_STATUS_ONGOING ) {
+			return gameStatus;
+		}
 		
 		int vfcValue = 0;
 		
@@ -39,7 +56,7 @@ public class MSController implements Controller {
 				
 				switch(vfcValue) {
 				case Constants.CELL_TYPE_FLAG: board.removedFlag();
-											   view.updateCounter(board.getNumFlags());
+											   //view.updateCounter(board.getNumFlags());
 				default: board.setVisibleValue(row, col, Constants.CELL_TYPE_REVEAL);
 				}
 				
@@ -48,6 +65,7 @@ public class MSController implements Controller {
 				switch(mfcValue) {
 				case Constants.SHOW_MINE: board.mineFound();
 				                          mineReveal();
+				                          gameStatus = Constants.GAME_STATUS_LOSE;
 				                          mfcValue--;
 				                          break;
 				case 0: blankReveal(row, col);
@@ -64,27 +82,25 @@ public class MSController implements Controller {
 												     vfcValue++;
 												 else {
 												     board.placedFlag();
-													 view.updateCounter(board.getNumFlags());
+													 //view.updateCounter(board.getNumFlags());
 												 }
 				                                 break;
 				case Constants.CELL_TYPE_FLAG: if(board.getNumFlags() == board.getNumBombs())
 					                               throw new IllegalStateException("Error: Flag state is incorrect - no flags should be on the board.");
 											  
 											   board.removedFlag();
-											   view.updateCounter(board.getNumFlags());
+											   //view.updateCounter(board.getNumFlags());
 				}
 				
 				if(vfcValue != Constants.CELL_TYPE_REVEAL) {
 				    vfcValue = (vfcValue % 3) + 1;
 					board.setVisibleValue(row, col, vfcValue);
-					view.updateCell(row, col, Constants.CELL_TYPE_REVEAL, 0);
+					view.updateCell(row, col, vfcValue, 0);
 				}
 			}
 			else if(type == Constants.CLICK_TYPE_BOTH && vfcValue == Constants.CELL_TYPE_REVEAL) {
 				areaReveal(row, col);
 			}
-			else
-				return 1;
 			
 		}
 		catch(Exception e){
@@ -92,7 +108,12 @@ public class MSController implements Controller {
 			return -1;
 		}
 		
-		return 0;
+		if(board.isGameOver() && gameStatus != Constants.GAME_STATUS_LOSE)
+			gameStatus = Constants.GAME_STATUS_WIN;
+		else if(gameStatus == Constants.GAME_STATUS_READY)
+			gameStatus = Constants.GAME_STATUS_ONGOING;
+		
+		return gameStatus;
 	}
 
 	@Override
@@ -102,13 +123,14 @@ public class MSController implements Controller {
 			board = new Minefield(rows, cols, mines);
 		else
 			board.resetField();
-		view.updateCounter(board.getNumFlags());
+		//view.updateCounter(board.getNumFlags());
 		generateField();
 	}
 
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
+		gameStatus = Constants.GAME_STATUS_READY;
 	}
 	
 	private int mineReveal(){
@@ -142,7 +164,8 @@ public class MSController implements Controller {
 		    y_neighbor = 0,
 		    rows = board.getRows(),
 		    columns = board.getColumns(),
-		    vfcValue = 0;
+		    vfcValue = 0,
+		    mfcValue = 0;
 		
 		for (x_neighbor = x - 1; x_neighbor < x + 2; x_neighbor++){
 			if (x_neighbor == rows)
@@ -157,22 +180,23 @@ public class MSController implements Controller {
 					continue;
 				
 				vfcValue = board.getVisibleValue(x_neighbor, y_neighbor);
+				mfcValue = board.getMineValue(x_neighbor, y_neighbor);
 				
 				if(vfcValue == Constants.CELL_TYPE_REVEAL)
 					continue;
 				else if(vfcValue == Constants.CELL_TYPE_FLAG) {
 					board.removedFlag();
 				}
-				
+								
 				board.setVisibleValue(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL);
-				view.updateCell(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL, 0);
+				view.updateCell(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL, mfcValue);
 				
-				if(board.getMineValue(x_neighbor, y_neighbor) == 0)
-					blankReveal(x, y);
+				if(mfcValue == 0)
+					blankReveal(x_neighbor, y_neighbor);
 			}
 		}
 		
-		view.updateCounter(board.getNumFlags());
+		//view.updateCounter(board.getNumFlags());
 	}
 	
 	private void areaReveal(int x, int y) {
@@ -206,6 +230,7 @@ public class MSController implements Controller {
 				switch(mfcValue) {
 				case Constants.SHOW_MINE: board.mineFound();
 										  mineReveal();
+										  gameStatus = Constants.GAME_STATUS_LOSE;
 										  mfcValue--;
 										  break;
 				case 0: blankReveal(x_neighbor, y_neighbor);
