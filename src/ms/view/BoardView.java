@@ -325,12 +325,15 @@ public class BoardView implements View, MouseListener, ActionListener {
 			if ( ((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Beginner") != -1) {
 				System.out.println("Beginner");
 				init(Constants.LEVEL_BEGINNER);
+				this.controller.configure(this.rows, this.cols, this.mines);
 			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("InterMediate") != -1) {
 				System.out.println("InterMediate");
 				init(Constants.LEVEL_INTERMEDIATE);
+				this.controller.configure(this.rows, this.cols, this.mines);
 			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Expert") != -1) {
 				System.out.println("Expert");
 				init(Constants.LEVEL_EXPERT);
+				this.controller.configure(this.rows, this.cols, this.mines);
 			}
 		} else if(e.getSource() instanceof JButton) {
 			System.out.println("reset");
