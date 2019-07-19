@@ -1,16 +1,20 @@
 package ms.view;
 
+import java.awt.BorderLayout;
 /**
  * This is a reusable UI component as a counter 
  * showing the number of mines and time.
  *
  */
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -108,16 +112,38 @@ public class Counter extends JPanel {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		ge.registerFont(font);
 	}
-
+/*
 	public static void main(String[] args) {
 		loadFont();
-		/** For flag counter **/
 		Counter counter = new Counter(15, 15, 0);
 		counter.draw();
-		/** For timer **/
+
 		Counter timer = new Counter(0, 999, 0);
 		timer.draw();
 		timer.createTimerAction(999);
 	}
+*/
+	public static void main(String[] args) {
+		JFrame frame = new JFrame();
+		frame.setLayout(new BorderLayout());
+		frame.add(new Counter2(10), BorderLayout.EAST);
+		frame.add(new JPanel(), BorderLayout.CENTER);
+		frame.add(new Counter2(20), BorderLayout.WEST);
+		frame.pack();
+		frame.setVisible(true);
+	}
+	
+}
 
+class Counter2 extends JPanel {
+	int value; 
+	public Counter2 (int initValue) {
+		this.value = initValue;
+		setPreferredSize(new Dimension(100,  50));
+		setBackground(Color.BLACK);
+		JLabel label = new JLabel(String.valueOf(value));
+		label.setFont(new Font(Font.DIALOG, Font.BOLD, 25 ));
+		label.setForeground(Color.RED);
+		add(label);
+	}
 }

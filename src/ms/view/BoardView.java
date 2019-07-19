@@ -37,7 +37,6 @@ public class BoardView implements View, MouseListener, ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
-
 	private final int CELL_SIZE = 25;
 
 	public static ImageIcon [] ICON_FACES = { 
@@ -71,9 +70,6 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 	/**
 	 * 
-	 * @param rows
-	 * @param cols
-	 * @param mines
 	 */
 	public BoardView(int level) {
 		init(level);
@@ -371,6 +367,4 @@ public class BoardView implements View, MouseListener, ActionListener {
 		this.controller.configure(this.rows, this.cols, this.mines);
 		this.timer = null;
 	}
-
-
 }
