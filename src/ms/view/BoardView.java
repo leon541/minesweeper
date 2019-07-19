@@ -333,10 +333,9 @@ public class BoardView implements View, MouseListener, ActionListener {
 				init(Constants.LEVEL_EXPERT);
 			}
 		} else if(e.getSource() instanceof JButton) {
-			 if(++faceIndex == ICON_FACES.length)
-				faceIndex = 0; 
-			resetButton.setIcon(ICON_FACES[faceIndex]);
 			System.out.println("reset");
+			reset();
+			
 		}
 	}
 
@@ -352,4 +351,19 @@ public class BoardView implements View, MouseListener, ActionListener {
 			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_WIN]);
 		}
 	}
+
+	/**
+	 * 
+	 */
+	private void reset() {
+		for(int row = 0; row < rows ; row++) {
+			for (int col = 0; col < cols; col++) {
+				this.cellButtons[row][col].updateIcon(1, 0);
+			}
+		}
+		this.resetButton.setIcon(ICON_FACES[0]);
+		this.controller.configure(this.rows, this.cols, this.mines);
+	}
+	
+	
 }
