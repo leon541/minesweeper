@@ -29,8 +29,11 @@ public class Counter extends JPanel {
 	private int lower;
 	private String format;
 	private JFrame frame;
+	private JPanel panel;
 	private JLabel label;
 	private Timer timer;
+
+	private ActionListener listener;
 	private static Font font;
 
 	public Counter(int initValue, int upper, int lower) {
@@ -62,45 +65,59 @@ public class Counter extends JPanel {
 	}
 
 	public void reset() {
+		if(timer != null) {
+			timer.removeActionListener(listener);
+			int delay = 999;
+			createActionListener(delay);
+		}
+		setValue(initValue);
 		setLabelText(initValue);
 	}
 
-	public void createTimerAction(int delay) {
-		
-		timer = new Timer(delay, new ActionListener() {
+	public void createActionListener(int delay) {
+		listener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				increase();
 			}
-		});
+		};
+		
+		timer = new Timer(delay, listener);
 		timer.setInitialDelay(0);
+	}
+	public void startTimer() {
 		timer.start();
+	}
+
+	public void stopTimer() {
+		timer.stop();
 	}
 
 	private void setLabelText(int val) {
 		label.setText(String.format(format, val));
 	}
 
-	public void draw() {
+	public JPanel getPanel() {
 		format = "%0" + String.valueOf(upper).length() + "d";
-		frame = new JFrame();
+		//frame = new JFrame();
 		label = new JLabel(String.format(format, initValue));
 		label.setForeground(Color.red);
 		label.setFont(font);
 
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBackground(Color.black);
 		panel.add(label);
-		frame.add(panel);
+		/*frame.add(panel);
 		// set the size of frame
 		frame.setSize(50, 50);
 		frame.pack();
-		frame.setVisible(true);
+		frame.setVisible(true);*/
 		setValue(initValue);
+		return panel;
 
 	}
 
-	private static void loadFont() {
+	public static void loadFont() {
 		// Load font from file
 		File file = new File("./fonts/DJB Get Digital.ttf");  
 		try {
@@ -108,42 +125,11 @@ public class Counter extends JPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		font = font.deriveFont(Font.BOLD, 30);
+		font = font.deriveFont(Font.BOLD, 38);
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		ge.registerFont(font);
-	}
-/*
-	public static void main(String[] args) {
-		loadFont();
-		Counter counter = new Counter(15, 15, 0);
-		counter.draw();
-
-		Counter timer = new Counter(0, 999, 0);
-		timer.draw();
-		timer.createTimerAction(999);
-	}
-*/
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		frame.setLayout(new BorderLayout());
-		frame.add(new Counter2(10), BorderLayout.EAST);
-		frame.add(new JPanel(), BorderLayout.CENTER);
-		frame.add(new Counter2(20), BorderLayout.WEST);
-		frame.pack();
-		frame.setVisible(true);
 	}
 	
 }
 
-class Counter2 extends JPanel {
-	int value; 
-	public Counter2 (int initValue) {
-		this.value = initValue;
-		setPreferredSize(new Dimension(100,  50));
-		setBackground(Color.BLACK);
-		JLabel label = new JLabel(String.valueOf(value));
-		label.setFont(new Font(Font.DIALOG, Font.BOLD, 25 ));
-		label.setForeground(Color.RED);
-		add(label);
-	}
-}
+

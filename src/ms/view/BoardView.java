@@ -60,6 +60,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 	int rows, cols, mines;
 	CellButton [][] cellButtons;
 	JButton resetButton ; 
+	private JPanel timerPanel;
 
 	/**
 	 * default view 
@@ -108,7 +109,10 @@ public class BoardView implements View, MouseListener, ActionListener {
 		JPanel topPanel = new JPanel();
 		//topPanel.setLayout(new FlowLayout());
 		topPanel.setLayout(new BorderLayout());
-		topPanel.add(getCounterPanel(),  BorderLayout.WEST);
+		JPanel counterPanel = getCounterPanel();
+		counterPanel.setPreferredSize(new Dimension(70,50));
+		//counterPanel.set
+		topPanel.add(counterPanel,  BorderLayout.WEST);
 
 		resetButton = new JButton();
 		resetButton.setIcon(ICON_FACES[0]);
@@ -118,16 +122,31 @@ public class BoardView implements View, MouseListener, ActionListener {
 		JPanel resetPanel = new JPanel(); 
 		resetPanel.add(resetButton);
 		topPanel.add(resetPanel,BorderLayout.CENTER );
-		topPanel.add(getCounterPanel(),  BorderLayout.EAST);
+		timerPanel = getTimerPanel();
+		timerPanel.setPreferredSize(new Dimension(70,50));
+		topPanel.add(timerPanel,  BorderLayout.EAST);
 
 		return topPanel;
 	}
 
 	JPanel getCounterPanel() {
-		JPanel countPanel = new JPanel();
-		countPanel.setBackground(Color.BLUE);
-		countPanel.setPreferredSize(new Dimension(50, 50));
-		return countPanel;
+		int minesNo = 15;
+		int initialVal = minesNo;
+		int minFlags = 0;
+		Counter.loadFont();
+		Counter counter = new Counter(initialVal, minesNo, minFlags);
+		return counter.getPanel();
+		
+	}
+
+	JPanel getTimerPanel() {
+		int maxTime = 999;
+		int initialVal = 0, minTime = 0;
+		timerCounter = new Counter(initialVal, maxTime, minTime);
+		int delay = 999;
+		timerCounter.createActionListener(delay);
+		return timerCounter.getPanel();
+
 	}
 
 	JPanel getMinePanel() {
@@ -335,22 +354,27 @@ public class BoardView implements View, MouseListener, ActionListener {
 	}
 	private void handleClickResult(int result) {
 		if(result == Constants.GAME_STATUS_ONGOING) {
-			if(this.timer == null) {
+			timerCounter.startTimer();
+			/*if(this.timer == null) {
 				timer = new Timer();
 				timer.scheduleAtFixedRate(new TimerTask(){
 					public void run() {
 						System.out.println("Timer:"+ seconds++);
 					}
 				},1000,1000);
-			}
+			}*/
 		}else if(result == Constants.GAME_STATUS_LOSE) {  // 3
 			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_LOSE]);
-			if(timer != null)
-				timer.cancel();
+			/*if(timer != null)
+				timer.cancel();*/
+			if(timerCounter != null)
+				timerCounter.stopTimer();
 		} else if(result == Constants.GAME_STATUS_WIN) { // 2
 			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_WIN]);
-			if(timer != null)
-				timer.cancel();
+			/*if(timer != null)
+				timer.cancel();*/
+			if(timerCounter != null)
+				timerCounter.stopTimer();
 		}
 	}
 
@@ -365,6 +389,9 @@ public class BoardView implements View, MouseListener, ActionListener {
 		}
 		this.resetButton.setIcon(ICON_FACES[0]);
 		this.controller.configure(this.rows, this.cols, this.mines);
-		this.timer = null;
+		//this.timer = null;
+		if(timerCounter != null) {
+			timerCounter.reset();
+		}
 	}
 }
