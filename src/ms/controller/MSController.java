@@ -301,8 +301,8 @@ public class MSController implements Controller {
 		}
 		
 		for (int bombloc: bombs) {
-			x = bombloc / rows;
-			y = bombloc % rows;
+			x = bombloc / columns;
+			y = bombloc % columns;
 			
 			while (board.getMineValue(x, y) == Constants.SHOW_MINE || (x == row && y == col)){
 				bombloc = (int) Math.floor((Math.random() * (rows * columns)));
