@@ -142,7 +142,7 @@ class Counter2 extends JPanel {
 		setPreferredSize(new Dimension(100,  50));
 		setBackground(Color.BLACK);
 		JLabel label = new JLabel(String.valueOf(value));
-		label.setFont(new Font(Font.DIALOG, Font.BOLD, 25 ));
+		label.setFont(new Font(Font.DIALOG, Font.BOLD, 20 ));
 		label.setForeground(Color.RED);
 		add(label);
 	}
