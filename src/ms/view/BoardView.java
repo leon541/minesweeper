@@ -337,6 +337,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 	@Override
 	public void updateCounter(int numberOfMines) {
+		this.numberOfMines.setValue(numberOfMines);
 		// TODO Auto-generated method stub
 
 	}

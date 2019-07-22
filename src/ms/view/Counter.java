@@ -54,7 +54,10 @@ public class Counter extends JPanel {
 	}
 
 	public void setValue(int value) {
-		this.value = value;
+		if (value <= upper && value >= lower) {
+			setLabelText(value);
+			this.value = value;
+		}
 	}
 
 	public int getValue() {
