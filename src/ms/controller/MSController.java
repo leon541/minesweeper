@@ -1,6 +1,5 @@
 package ms.controller;
 
-
 import ms.Constants;
 import ms.view.View;
 import ms.model.Minefield;
@@ -10,6 +9,7 @@ public class MSController implements Controller {
 	View view;
 	Minefield board;
 	private int gameStatus;
+	private boolean firstClick;
 	
 	public MSController() {
 		int[] base = Constants.LEVEL_PARAMETERS[Constants.LEVEL_INTERMEDIATE];
@@ -46,7 +46,7 @@ public class MSController implements Controller {
 			System.out.println(e.getMessage());
 			return -1;
 		}
-		
+
 		try {
 			if (type == Constants.CLICK_TYPE_LEFT && vfcValue != Constants.CELL_TYPE_REVEAL) {
 				/*
@@ -55,9 +55,14 @@ public class MSController implements Controller {
 				*/
 				
 				switch(vfcValue) {
-				case Constants.CELL_TYPE_FLAG: board.removedFlag();
+				case Constants.CELL_TYPE_FLAG: return gameStatus;
 											   //view.updateCounter(board.getNumFlags());
 				default: board.setVisibleValue(row, col, Constants.CELL_TYPE_REVEAL);
+				}
+				
+				if(firstClick) {
+					generateField(row, col);
+					firstClick = false;
 				}
 				
 				int mfcValue = board.getMineValue(row, col);
@@ -71,9 +76,11 @@ public class MSController implements Controller {
 				case 0: blankReveal(row, col);
 				}
 				
-				if(board.isMineFound() || board.minesLastStanding())
+				if(board.isMineFound() || board.minesLastStanding()) {
 					board.gameOver();
-				
+					flagAndTag();
+				}
+					
 				view.updateCell(row, col, Constants.CELL_TYPE_REVEAL, mfcValue);
 			}
 			else if(type == Constants.CLICK_TYPE_RIGHT) {
@@ -124,13 +131,14 @@ public class MSController implements Controller {
 		else
 			board.resetField();
 		//view.updateCounter(board.getNumFlags());
-		generateField();
+		//generateField();
+		firstClick = true;
+		gameStatus = Constants.GAME_STATUS_READY;
 	}
 
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
-		gameStatus = Constants.GAME_STATUS_READY;
 	}
 	
 	private int mineReveal(){
@@ -139,11 +147,17 @@ public class MSController implements Controller {
 		int numBombs = board.getNumBombs(),
 			mines = 0,
 			rows = board.getRows(),
-		    columns = board.getColumns();
+		    columns = board.getColumns(),
+		    vfcValue = 0;
 		
 		for(int r = 0; r < rows; r++){
 			for(int c = 0; c < columns; c++){
-				if(board.getMineValue(r, c) != Constants.SHOW_MINE || board.getVisibleValue(r, c) == Constants.CELL_TYPE_REVEAL)
+				if(board.getMineValue(r, c) != Constants.SHOW_MINE)
+					continue;
+				
+				vfcValue = board.getVisibleValue(r, c);
+				
+				if (vfcValue == Constants.CELL_TYPE_REVEAL || vfcValue == Constants.CELL_TYPE_FLAG)
 					continue;
 				
 				board.setVisibleValue(r, c, Constants.CELL_TYPE_REVEAL);
@@ -182,11 +196,8 @@ public class MSController implements Controller {
 				vfcValue = board.getVisibleValue(x_neighbor, y_neighbor);
 				mfcValue = board.getMineValue(x_neighbor, y_neighbor);
 				
-				if(vfcValue == Constants.CELL_TYPE_REVEAL)
+				if(vfcValue == Constants.CELL_TYPE_REVEAL || vfcValue == Constants.CELL_TYPE_FLAG)
 					continue;
-				else if(vfcValue == Constants.CELL_TYPE_FLAG) {
-					board.removedFlag();
-				}
 								
 				board.setVisibleValue(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL);
 				view.updateCell(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL, mfcValue);
@@ -240,11 +251,32 @@ public class MSController implements Controller {
 			}
 		}
 		
-		if(board.isMineFound() || board.minesLastStanding())
+		if(board.isMineFound() || board.minesLastStanding()) {
 			board.gameOver();
+			flagAndTag();
+		}
 	}
 	
-	private void generateField() {
+	private void flagAndTag() {
+		if(board.isMineFound() || !board.minesLastStanding()) { return; }
+		
+		int rows = board.getRows(),
+			columns = board.getColumns(),
+			vfcValue = 0;
+		
+		for(int r = 0; r < rows; r++)
+			for(int c = 0; c < columns; c++) {
+				vfcValue = board.getVisibleValue(r, c);
+				
+				if(vfcValue == Constants.CELL_TYPE_REVEAL || vfcValue == Constants.CELL_TYPE_FLAG)
+					continue;
+				
+				board.setVisibleValue(r, c, Constants.CELL_TYPE_FLAG);
+				view.updateCell(r, c, Constants.CELL_TYPE_FLAG, Constants.SHOW_MINE);
+			}
+	}
+	
+	private void generateField(int row, int col) {
 		int x = 0,
 		    y = 0,
 		    rows = board.getRows(),
@@ -254,6 +286,14 @@ public class MSController implements Controller {
 		    numBombs = board.getNumBombs(),
 		    mfcValue = 0;
 		
+		if(numBombs == 0) { return; }
+		else if(numBombs == (rows * columns)) {
+			for(int r = 0; r < rows; r++)
+				for(int c =0; c < columns; c++)
+					board.setMineValue(r, c, Constants.SHOW_MINE);
+			return;
+		}
+			
 		int[] bombs = new int[numBombs];	
 		
 		for(int b = 0; b < numBombs; b++){
@@ -264,8 +304,9 @@ public class MSController implements Controller {
 			x = bombloc / rows;
 			y = bombloc % rows;
 			
-			while (board.getMineValue(x, y) == Constants.SHOW_MINE){
+			while (board.getMineValue(x, y) == Constants.SHOW_MINE || (x == row && y == col)){
 				bombloc = (int) Math.floor((Math.random() * (rows * columns)));
+				//bombloc = (bombloc + 1) % (rows * columns);
 				x = bombloc / rows;
 				y = bombloc % rows;
 			}

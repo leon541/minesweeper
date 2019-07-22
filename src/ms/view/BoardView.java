@@ -7,13 +7,14 @@ import ms.Constants;
 import ms.controller.Controller;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -34,7 +35,6 @@ public class BoardView implements View, MouseListener, ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
-
 	private final int CELL_SIZE = 25;
 
 	public static ImageIcon [] ICON_FACES = { 
@@ -43,27 +43,21 @@ public class BoardView implements View, MouseListener, ActionListener {
 			new ImageIcon("images/facewin.png"),  // 2
 			new ImageIcon("images/facelose.png")   // 3
 	};
-	
+
 	// temp;
 	int faceIndex = 0; 
-	
+
 	private JFrame mainFrame; // main window
+	
 	private Counter numberOfMines; 
-	private Counter timer; 
+	private Counter timerCounter; 
+
 	Controller controller;
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		BoardView mainView = new BoardView(); 
-
-	}
 
 	int rows, cols, mines;
 	CellButton [][] cellButtons;
 	JButton resetButton ; 
+	private JPanel timerPanel;
 
 	/**
 	 * default view 
@@ -74,9 +68,6 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 	/**
 	 * 
-	 * @param rows
-	 * @param cols
-	 * @param mines
 	 */
 	public BoardView(int level) {
 		init(level);
@@ -113,28 +104,37 @@ public class BoardView implements View, MouseListener, ActionListener {
 	 */
 	JPanel getTopPanel() {
 		JPanel topPanel = new JPanel();
-		//topPanel.setLayout(new FlowLayout());
-		topPanel.setLayout(new BorderLayout());
-		topPanel.add(getCounterPanel(),  BorderLayout.WEST);
+		// cardLayout is mainly used to get some padding
+		topPanel.setLayout(new CardLayout(15, 15));
+ 
+		JPanel card = new JPanel();
+		card.setLayout(new BorderLayout());
 		
+		JPanel counterPanel = getCounterPanel();
+		card.add(counterPanel,  BorderLayout.WEST);
 		resetButton = new JButton();
 		resetButton.setIcon(ICON_FACES[0]);
 		resetButton.setPreferredSize(new Dimension(50, 50));
 		resetButton.addActionListener(this);
-		
+
 		JPanel resetPanel = new JPanel(); 
 		resetPanel.add(resetButton);
-		topPanel.add(resetPanel,BorderLayout.CENTER );
-		topPanel.add(getCounterPanel(),  BorderLayout.EAST);
+		card.add(resetPanel,BorderLayout.CENTER );
+		timerPanel = getTimerPanel();
+		card.add(timerPanel,  BorderLayout.EAST);
 
+		topPanel.add(card);
 		return topPanel;
 	}
 
 	JPanel getCounterPanel() {
-		JPanel countPanel = new JPanel();
-		countPanel.setBackground(Color.BLUE);
-		countPanel.setPreferredSize(new Dimension(50, 50));
-		return countPanel;
+		this.numberOfMines = new Counter(this.mines, 999, 0, false);
+		return numberOfMines;
+	}
+
+	JPanel getTimerPanel() {
+		this.timerCounter = new Counter(0, 999, 0, true);
+		return timerCounter;
 	}
 
 	JPanel getMinePanel() {
@@ -168,7 +168,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 			CellButton gridButton = (CellButton) e.getSource();
 			int row = gridButton.getRow();
 			int col = gridButton.getCol();
-			
+
 			if(e.getButton() == MouseEvent.BUTTON1 && !keys[0]){
 				keys[0] = true;
 			}
@@ -177,7 +177,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 			}
 			if(keys[0] && keys[1] ){
 				System.out.println("Left + Right Pressed:");
-				
+
 				int clickResult = this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_BOTH);
 				handleClickResult(clickResult);
 			}
@@ -232,17 +232,11 @@ public class BoardView implements View, MouseListener, ActionListener {
 	@Override
 	public void init(int level) {
 		// TODO Auto-generated method stub
-		switch (level) {
-		case Constants.LEVEL_BEGINNER: 
-			init(level, 9, 9, 10);
-			break;
-		case Constants.LEVEL_INTERMEDIATE:
-			init(level, 16, 16, 40);
-			break; 
-		case Constants.LEVEL_EXPERT:
-			init(level, 16, 30, 99);
-			break;
-		}
+		System.out.println("Level" + level);
+		init(level, Constants.LEVEL_PARAMETERS[level][0],
+				Constants.LEVEL_PARAMETERS[level][1],
+				Constants.LEVEL_PARAMETERS[level][2]);
+
 
 	}
 
@@ -268,7 +262,6 @@ public class BoardView implements View, MouseListener, ActionListener {
 		mainFrame.setResizable(false);
 
 		mainFrame.setVisible(true);
-		//controller.configure(rows, cols, mines);
 
 	}
 
@@ -325,31 +318,69 @@ public class BoardView implements View, MouseListener, ActionListener {
 			if ( ((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Beginner") != -1) {
 				System.out.println("Beginner");
 				init(Constants.LEVEL_BEGINNER);
+				this.controller.configure(this.rows, this.cols, this.mines);
 			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("InterMediate") != -1) {
 				System.out.println("InterMediate");
 				init(Constants.LEVEL_INTERMEDIATE);
+				this.controller.configure(this.rows, this.cols, this.mines);
 			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Expert") != -1) {
 				System.out.println("Expert");
 				init(Constants.LEVEL_EXPERT);
+				this.controller.configure(this.rows, this.cols, this.mines);
 			}
 		} else if(e.getSource() instanceof JButton) {
-			 if(++faceIndex == ICON_FACES.length)
-				faceIndex = 0; 
-			resetButton.setIcon(ICON_FACES[faceIndex]);
 			System.out.println("reset");
+			reset();
+
 		}
 	}
 
 	@Override
 	public void updateCounter(int numberOfMines) {
+		this.numberOfMines.setValue(numberOfMines);
 		// TODO Auto-generated method stub
-		
+
 	}
 	private void handleClickResult(int result) {
-		if(result == Constants.GAME_STATUS_LOSE) {  // 3
+		if(result == Constants.GAME_STATUS_ONGOING) {
+			timerCounter.startTimer();
+			/*if(this.timer == null) {
+				timer = new Timer();
+				timer.scheduleAtFixedRate(new TimerTask(){
+					public void run() {
+						System.out.println("Timer:"+ seconds++);
+					}
+				},1000,1000);
+			}*/
+		}else if(result == Constants.GAME_STATUS_LOSE) {  // 3
 			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_LOSE]);
+			/*if(timer != null)
+				timer.cancel();*/
+			if(timerCounter != null)
+				timerCounter.stopTimer();
 		} else if(result == Constants.GAME_STATUS_WIN) { // 2
 			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_WIN]);
+			/*if(timer != null)
+				timer.cancel();*/
+			if(timerCounter != null)
+				timerCounter.stopTimer();
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void reset() {
+		for(int row = 0; row < rows ; row++) {
+			for (int col = 0; col < cols; col++) {
+				this.cellButtons[row][col].updateIcon(1, 0);
+			}
+		}
+		this.resetButton.setIcon(ICON_FACES[0]);
+		this.controller.configure(this.rows, this.cols, this.mines);
+		//this.timer = null;
+		if(timerCounter != null) {
+			timerCounter.reset();
 		}
 	}
 }
