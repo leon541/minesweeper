@@ -29,6 +29,7 @@ public class Counter extends JPanel {
 	private String format;
 	private JLabel label;
 	private Timer timer;
+	private boolean timerStarted;
 
 	private ActionListener listener;
 	private static Font font;
@@ -78,12 +79,17 @@ public class Counter extends JPanel {
 		}
 	}
 
+	public boolean isTimerStarted() {
+		return timerStarted;
+	}
+
 	public void reset() {
-		if(timer != null) {
+		if (timer != null) {
 			timer.removeActionListener(listener);
 			int delay = 999;
 			createActionListener(delay);
 		}
+		timerStarted = false;
 		setValue(initValue);
 		setLabelText(initValue);
 	}
@@ -101,10 +107,12 @@ public class Counter extends JPanel {
 	}
 	public void startTimer() {
 		timer.start();
+		timerStarted = true;
 	}
 
 	public void stopTimer() {
 		timer.stop();
+		timerStarted = false;
 	}
 
 	private void setLabelText(int val) {

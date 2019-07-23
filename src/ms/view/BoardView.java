@@ -341,29 +341,16 @@ public class BoardView implements View, MouseListener, ActionListener {
 		// TODO Auto-generated method stub
 
 	}
+
 	private void handleClickResult(int result) {
-		if(result == Constants.GAME_STATUS_ONGOING) {
+		if (result == Constants.GAME_STATUS_ONGOING && !timerCounter.isTimerStarted()) {
 			timerCounter.startTimer();
-			/*if(this.timer == null) {
-				timer = new Timer();
-				timer.scheduleAtFixedRate(new TimerTask(){
-					public void run() {
-						System.out.println("Timer:"+ seconds++);
-					}
-				},1000,1000);
-			}*/
-		}else if(result == Constants.GAME_STATUS_LOSE) {  // 3
+		} else if (result == Constants.GAME_STATUS_LOSE) { // 3
 			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_LOSE]);
-			/*if(timer != null)
-				timer.cancel();*/
-			if(timerCounter != null)
-				timerCounter.stopTimer();
-		} else if(result == Constants.GAME_STATUS_WIN) { // 2
+			timerCounter.stopTimer();
+		} else if (result == Constants.GAME_STATUS_WIN) { // 2
 			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_WIN]);
-			/*if(timer != null)
-				timer.cancel();*/
-			if(timerCounter != null)
-				timerCounter.stopTimer();
+			timerCounter.stopTimer();
 		}
 	}
 
