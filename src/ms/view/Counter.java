@@ -20,6 +20,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+/**
+ * This is a reusable UI component as a counter 
+ * showing the number of mines and time.
+ * @author harika
+ *
+ */
 public class Counter extends JPanel {
 	private static final long serialVersionUID = 1L;
 
@@ -35,6 +41,13 @@ public class Counter extends JPanel {
 	private ActionListener listener;
 	private static Font font;
 
+	/**
+	 * constructor
+	 * @param initValue
+	 * @param upper
+	 * @param lower
+	 * @param isTimer
+	 */
 	public Counter(int initValue, int upper, int lower, boolean isTimer) {
 		this.initValue = initValue;
 		this.upper = upper;
@@ -56,6 +69,10 @@ public class Counter extends JPanel {
 		}
 	}
 
+	/**
+	 * Set the value
+	 * @param value
+	 */
 	public void setValue(int value) {
 		if (value <= upper && value >= lower) {
 			setLabelText(value);
@@ -63,10 +80,17 @@ public class Counter extends JPanel {
 		}
 	}
 
+	/**
+	 * Get the value
+	 * @return
+	 */
 	public int getValue() {
 		return value;
 	}
 
+	/**
+	 * Increase the counter
+	 */
 	public void increase() {
 		if (value < upper) {
 			value++;
@@ -74,6 +98,9 @@ public class Counter extends JPanel {
 		}
 	}
 
+	/**
+	 * Decrease the counter
+	 */
 	public void decrease() {
 		if (value > lower) {
 			value--;
@@ -81,10 +108,17 @@ public class Counter extends JPanel {
 		}
 	}
 
+	/**
+	 * Checks if the timer has been started and returns true or false
+	 * @return
+	 */
 	public boolean isTimerStarted() {
 		return timerStarted;
 	}
 
+	/**
+	 * Resets the counter with initValue
+	 */
 	public void reset() {
 		if (timer != null) {
 			timer.removeActionListener(listener);
@@ -96,6 +130,10 @@ public class Counter extends JPanel {
 		setLabelText(initValue);
 	}
 
+	/**
+	 * Create action listener for timer
+	 * @param delay
+	 */
 	public void createActionListener(int delay) {
 		listener = new ActionListener() {
 			@Override
@@ -107,20 +145,33 @@ public class Counter extends JPanel {
 		timer = new Timer(delay, listener);
 		timer.setInitialDelay(0);
 	}
+	/**
+	 * Start the timer
+	 */
 	public void startTimer() {
 		timer.start();
 		timerStarted = true;
 	}
 
+	/**
+	 * Stop the timer
+	 */
 	public void stopTimer() {
 		timer.stop();
 		timerStarted = false;
 	}
 
+	/**
+	 * Set label text
+	 * @param val
+	 */
 	private void setLabelText(int val) {
 		label.setText(String.format(format, val));
 	}
 
+	/**
+	 * Load font
+	 */
 	public static void loadFont() {
 		// Load font from file
 		File file = new File("./fonts/digital-7 (mono).ttf");  
@@ -129,7 +180,7 @@ public class Counter extends JPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		font = font.deriveFont(Font.BOLD, 50);
+		font = font.deriveFont(Font.BOLD, 60);
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		ge.registerFont(font);
 	}
