@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package ms.view;
 
 import ms.Constants;
@@ -25,14 +23,12 @@ import javax.swing.JRadioButtonMenuItem ;
 import javax.swing.JMenu;
 
 /**
+ * Main game view 
  * @author lwang
  *
  */
 public class BoardView implements View, MouseListener, ActionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final int CELL_SIZE = 25;
@@ -43,38 +39,39 @@ public class BoardView implements View, MouseListener, ActionListener {
 			new ImageIcon("images/facewin.png"),  // 2
 			new ImageIcon("images/facelose.png")   // 3
 	};
-
-	// temp;
-	int faceIndex = 0; 
-
-	private JFrame mainFrame; // main window
-	
+	// UI components
+	private JFrame mainFrame; // main Frame
 	private Counter numberOfMines; 
 	private Counter timerCounter; 
-
-	Controller controller;
-
-	int rows, cols, mines;
 	CellButton [][] cellButtons;
 	JButton resetButton ; 
-	private JPanel timerPanel;
-
+	// controller
+	Controller controller;
+	// game specs
+	int rows, cols, mines;  
+	
+	private static final String LEVEL_BEGINNER = "Beginner";
+	private static final String LEVEL_INTERMEDIATE = "Intermediate";
+	private static final String LEVEL_EXPERT = "Expert";
+	
 	/**
-	 * default view 
+	 * default constructor view 
 	 */
 	public BoardView() {
 		this(Constants.LEVEL_INTERMEDIATE);  // should use marcos
 	}
 
 	/**
+	 * constructor with level
 	 * 
+	 * @param level 0,1,2 according to Constants 
 	 */
 	public BoardView(int level) {
 		init(level);
 	}
 
 	/**
-	 * 
+	 * inject controller 
 	 * @param controller
 	 */
 	@Override
@@ -120,23 +117,36 @@ public class BoardView implements View, MouseListener, ActionListener {
 		JPanel resetPanel = new JPanel(); 
 		resetPanel.add(resetButton);
 		card.add(resetPanel,BorderLayout.CENTER );
-		timerPanel = getTimerPanel();
+		JPanel timerPanel = getTimerPanel();
 		card.add(timerPanel,  BorderLayout.EAST);
 
 		topPanel.add(card);
 		return topPanel;
 	}
-
+	
+	/**
+	 * Mine Counter Panel
+	 * @return
+	 */
 	JPanel getCounterPanel() {
 		this.numberOfMines = new Counter(this.mines, 999, 0, false);
 		return numberOfMines;
 	}
-
+	
+	/**
+	 * Timer Panel 
+	 * @return
+	 */
 	JPanel getTimerPanel() {
 		this.timerCounter = new Counter(0, 999, 0, true);
 		return timerCounter;
 	}
 
+	
+	/**
+	 * Mine field panel
+	 * @return
+	 */
 	JPanel getMinePanel() {
 		JPanel minePanel = new JPanel();
 		minePanel.setPreferredSize(new Dimension(CELL_SIZE * cols, CELL_SIZE * rows));
@@ -229,18 +239,25 @@ public class BoardView implements View, MouseListener, ActionListener {
 		return 0;
 	}
 
-	@Override
+	/**
+	 * Initialize the board
+	 * @param level: 0,1,2 for 
+	 */
 	public void init(int level) {
 		// TODO Auto-generated method stub
 		System.out.println("Level" + level);
 		init(level, Constants.LEVEL_PARAMETERS[level][0],
 				Constants.LEVEL_PARAMETERS[level][1],
 				Constants.LEVEL_PARAMETERS[level][2]);
-
-
 	}
-
-	@Override
+	/**
+	 * Initialize with spec 
+	 * 
+	 * @param level
+	 * @param rows
+	 * @param cols
+	 * @param mines
+	 */
 	public void init(int level,  int rows, int cols, int mines) {
 		// TODO Auto-generated method stub
 		this.rows = rows; 
@@ -273,13 +290,13 @@ public class BoardView implements View, MouseListener, ActionListener {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menuLevels = new JMenu("Levels");
 
-		JRadioButtonMenuItem levelBeginner = new JRadioButtonMenuItem ("Beginner"); // for dispaly
-		levelBeginner.setName("Beginner"); // for action ID
+		JRadioButtonMenuItem levelBeginner = new JRadioButtonMenuItem (LEVEL_BEGINNER); // for dispaly
+		levelBeginner.setName(LEVEL_BEGINNER); // for action ID
 
-		JRadioButtonMenuItem levelInterMediate  = new JRadioButtonMenuItem ("InterMediate");
-		levelInterMediate.setName("InterMediate");
-		JRadioButtonMenuItem levelExpert  = new JRadioButtonMenuItem ("Expert");
-		levelExpert.setName("Expert"); 
+		JRadioButtonMenuItem levelInterMediate  = new JRadioButtonMenuItem (LEVEL_INTERMEDIATE);
+		levelInterMediate.setName(LEVEL_INTERMEDIATE);
+		JRadioButtonMenuItem levelExpert  = new JRadioButtonMenuItem (LEVEL_EXPERT);
+		levelExpert.setName(LEVEL_EXPERT); 
 
 		ButtonGroup btnGroup = new ButtonGroup();
 
@@ -311,20 +328,22 @@ public class BoardView implements View, MouseListener, ActionListener {
 		return menuBar;
 	}
 
-
-	@Override
+	/**
+	 * Handle menu and reset event 
+	 * @Override 
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() instanceof JRadioButtonMenuItem) {  // leve in the menu
-			if ( ((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Beginner") != -1) {
-				System.out.println("Beginner");
+			if ( ((JRadioButtonMenuItem)e.getSource()).getName().indexOf(LEVEL_BEGINNER) != -1) {
+				System.out.println(LEVEL_BEGINNER);
 				init(Constants.LEVEL_BEGINNER);
 				this.controller.configure(this.rows, this.cols, this.mines);
-			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("InterMediate") != -1) {
-				System.out.println("InterMediate");
+			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf(LEVEL_INTERMEDIATE) != -1) {
+				System.out.println(LEVEL_INTERMEDIATE);
 				init(Constants.LEVEL_INTERMEDIATE);
 				this.controller.configure(this.rows, this.cols, this.mines);
-			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf("Expert") != -1) {
-				System.out.println("Expert");
+			} else if (((JRadioButtonMenuItem)e.getSource()).getName().indexOf(LEVEL_EXPERT) != -1) {
+				System.out.println(LEVEL_EXPERT);
 				init(Constants.LEVEL_EXPERT);
 				this.controller.configure(this.rows, this.cols, this.mines);
 			}
@@ -335,13 +354,20 @@ public class BoardView implements View, MouseListener, ActionListener {
 		}
 	}
 
-	@Override
+	/**
+	 * update number of mine counter
+	 * @Override
+	 */
 	public void updateCounter(int numberOfMines) {
 		this.numberOfMines.setValue(numberOfMines);
-		// TODO Auto-generated method stub
-
 	}
-
+	
+	
+	/**
+	 * update view according to click result from Controller 
+	 * 
+	 * @param result
+	 */
 	private void handleClickResult(int result) {
 		if (result == Constants.GAME_STATUS_ONGOING && !timerCounter.isTimerStarted()) {
 			timerCounter.startTimer();
@@ -355,7 +381,8 @@ public class BoardView implements View, MouseListener, ActionListener {
 	}
 
 	/**
-	 * 
+	 * reset the board when click the smily face
+	 * this is done without condition or popup
 	 */
 	private void reset() {
 		for(int row = 0; row < rows ; row++) {

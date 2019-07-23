@@ -1,18 +1,22 @@
 package ms;
 
-/**
- * @author lwang
- *
- */
 import ms.controller.*;
 import ms.view.*;
 import ms.model.*;
 
+/**
+ * Top class looking over the game
+ * 
+ * @author lwang
+ *
+ */
 public class Game {
 
 	Controller controller;
 	View view;
+	
 	/**
+	 * entry of the game  
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -20,6 +24,9 @@ public class Game {
 		Game ms = new Game();
 	}
 	
+	/**
+	 * Constructor
+	 */
 	public Game() {
 		//controller = new DummyController();
 		controller = new MSController();
