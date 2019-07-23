@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,6 +46,7 @@ public class Counter extends JPanel {
 		label = new JLabel(String.format(format, initValue));
 		label.setForeground(Color.red);
 		label.setFont(font);
+		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 0));
 		this.setPreferredSize(new Dimension(90, 40));
 		this.setBackground(Color.black);
 		this.add(label);
@@ -121,7 +123,7 @@ public class Counter extends JPanel {
 
 	public static void loadFont() {
 		// Load font from file
-		File file = new File("./fonts/DJB Get Digital.ttf");  
+		File file = new File("./fonts/digital-7 (mono).ttf");  
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT, file);
 		} catch (Exception e) {
