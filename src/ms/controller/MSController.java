@@ -1,8 +1,7 @@
 package ms.controller;
 
-import java.util.ArrayList;
 import ms.Constants;
-import ms.view.View;
+import ms.view.*;
 import ms.model.Minefield;
 /**
  * @author      Preston, Robert (RP1211) 
@@ -26,8 +25,12 @@ public class MSController implements Controller {
 	 * 
 	 */
 	public MSController() {
+		view = new BoardView(Constants.LEVEL_INTERMEDIATE);
+		
 		int[] base = Constants.LEVEL_PARAMETERS[Constants.LEVEL_INTERMEDIATE];
 		configure(base[0], base[1], base[2]);
+		
+		view.updateCounter(board.getNumFlags());
 	}
 	
 	/**
@@ -43,13 +46,32 @@ public class MSController implements Controller {
 	 */
 	public MSController(int level) {
 		try {
+			view = new BoardView(level);
+
 			int[] base = Constants.LEVEL_PARAMETERS[level];
 			configure(base[0], base[1], base[2]);
+			
+			view.updateCounter(board.getNumFlags());
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	/*
+	public MSController(View view) {
+		try {
+			this.view = view;
+
+			configure(view.getRows(), view.getColumns(), view.getMines());
+			
+			view.updateCounter(board.getNumFlags());
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+	}
+	*/
 	
 	/**
 	 * Sets the View object for this MSController
@@ -62,7 +84,6 @@ public class MSController implements Controller {
 		this.view = view;
 		if(board != null)
 			view.updateCounter(board.getNumFlags());
-
 	}
 	
 	/**
@@ -173,13 +194,6 @@ public class MSController implements Controller {
 				                          break;
 				case 0: blankReveal(row, col);		// If a blank space is revealed, run blankReveal function on cell;
 				}									// Otherwise, do nothing else.
-				
-				// Verify if End-of-Game conditions have been met.
-				if(board.isMineFound() || board.minesLastStanding()) {
-					// Set game to be over and run end-flagging function.
-					board.gameOver();
-					flagAndTag();
-				}
 					
 				view.updateCell(row, col, Constants.CELL_TYPE_REVEAL, mfcValue);	// Update view of revealed cell.
 			}
@@ -213,21 +227,21 @@ public class MSController implements Controller {
 			}
 			
 			// Actions taken if a joint left-right-click is made on a revealed cell.
-			else if(type == Constants.CLICK_TYPE_BOTH && vfcValue == Constants.CELL_TYPE_REVEAL) {
+			else if(type == Constants.CLICK_TYPE_BOTH && vfcValue == Constants.CELL_TYPE_REVEAL)
 				areaReveal(row, col);		// Run areaReveal function on clicked cell.
 				
-				// Verify if End-of-Game conditions have been met.
-				if(board.isMineFound() || board.minesLastStanding()) {
-					// Set game to be over and run end-flagging function.
-					board.gameOver();
-					flagAndTag();
-				}
-			}
 			// Other pairings will result in no actions needed to be taken.
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
 			return -1;
+		}
+		
+		// Verify if End-of-Game conditions have been met.
+		if(board.isMineFound() || board.minesLastStanding()) {
+			// Set game to be over and run end-flagging function.
+			board.gameOver();
+			flagAndTag();
 		}
 		
 		// Update game status based on results of the click

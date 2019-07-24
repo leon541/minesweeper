@@ -2,24 +2,37 @@ package ms.model;
 import java.util.Arrays;
 
 import ms.Constants;
-import java.lang.Enum;
-import java.lang.Math;
 import java.lang.Exception;
 
+/**
+ * @author      Preston, Robert (RP1211) 
+ */
 public class Minefield{	
-	//private enum Difficulty { BEGINNER, INTERMEDIATE, EXPERT; }
-
+	/** 2D array of visibility values for cells. */
 	private int[][] visible_field;
+	/** 2D array of mine values for cells. */
 	private int[][] mine_field;
 	
+	/** Number of Columns and Rows for the field. */
 	private int columns;
 	private int rows;
 	
+	/** Number of mines on the field. */
 	private int numBombs;
+	/** Current number of available flags. */
 	private int numFlags;
+	/** Indicator if the current game is over. */
 	private boolean gameover;
+	/** Indicator if a mine was revealed. */
 	private boolean mine_found;
 	
+	/**
+	 * Default no-argument constructor of Minefield.
+	 * 
+	 * Initializes the fields and indicators at the default values (which are equivalent to
+	 * the "BEGINNER" level values in 'Constants.java').
+	 * 
+	 */
 	public Minefield(){
 		columns = 9;
 		rows = 9;
@@ -31,6 +44,15 @@ public class Minefield{
 		resetField();
 	}
 	
+	/**
+	 * Copy constructor of Minefield.
+	 * 
+	 * Initializes the fields and indicators to the exact values as the passed Minefield
+	 * object. The values stored in each field are also copied from the values stored in the
+	 * passed Minefield object.
+	 * 
+	 * @param m		The Minefield object to be copied from.
+	 */
 	public Minefield(Minefield m){
 		this.columns = m.columns;
 		this.rows = m.rows;
@@ -49,6 +71,16 @@ public class Minefield{
 		this.mine_found = m.mine_found;
 	}
 	
+	/**
+	 * R-C-M Constructor of Minefield.
+	 * 
+	 * Initializes the fields using the given number of rows, columns and mines. Then, the 
+	 * fields and indicators will be set to their defaulted values.
+	 * 
+	 * @param rows		The number of rows the fields will have.
+	 * @param columns	The number of columns the fields will have.
+	 * @param numBombs	The number of mines that will populate the mine field.
+	 */
 	public Minefield(int rows, int columns, int numBombs){
 		this.columns = columns;
 		this.rows = rows;
@@ -68,7 +100,15 @@ public class Minefield{
 		resetField();
 	}
  */
-	
+	/**
+	 * Difficulty-based constructor of Minefield.
+	 * 
+	 * Initializes the fields using values based on the given difficulty level. The fields and
+	 * indicators will then be set to their default values. If the given difficulty level is 
+	 * not an acceptable value, it will output an error.
+	 * 
+	 * @param level		The difficulty level to construct the fields.
+	 */
 	public Minefield(int level){
 		try{
 			switch(level){
@@ -103,78 +143,107 @@ public class Minefield{
 		double root = sqrt(cells)
 		numBombs = (2 * round(root)) - 8);
 	}
-	
-	
-	private void generateField(){
-		numFlags = numBombs;
-		gameover = mine_found = false;
-		
-		int[] bombs = new int[numBombs];
-		int x = 0, y = 0, x_neighbor = 0, y_neighbor = 0;
-			
-		for(int b = 0; b < numBombs; b++){
-			bombs[b] = (int) Math.floor((Math.random() * (rows * columns)));
-		}
-		
-		for(int a = 0; a < rows; a++){
-			Arrays.fill(visible_field[a],1);
-			Arrays.fill(mine_field[a],0);
-		}
-		
-		for (int bombloc: bombs) {
-			x = bombloc / rows;
-			y = bombloc % rows;
-			
-			while (mine_field[x][y] == -1){
-				bombloc = (int) Math.floor((Math.random() * (rows * columns)));
-				x = bombloc / rows;
-				y = bombloc % rows;
-			}
-			
-			mine_field[x][y] = -1;
-			
-			for (x_neighbor = x - 1; x_neighbor < x + 2; x_neighbor++){
-				if (x_neighbor == rows)
-					break;
-				if (x_neighbor < 0)
-					continue;
-				
-				for (y_neighbor = y - 1; y_neighbor < y + 2; y_neighbor++){
-					if(y_neighbor == columns)
-						break;
-					if(y_neighbor < 0 || mine_field[x_neighbor][y_neighbor] == -1)
-						continue;
-					
-					mine_field[x_neighbor][y_neighbor]++;
-				}
-			}
-		}
-	}
 	*/
+	
+	/**
+	 * Retrieve the number of rows of the field.
+	 *
+	 * @return		The number of rows the fields have.
+	 */
 	public int getRows(){ return rows; }
-	public void setRows(int rows) { this.rows = rows;}
+	//public void setRows(int rows) { this.rows = rows;}
 	
+	/**
+	 * Retrieve the number of columns of the field.
+	 * 
+	 * @return		The number of columns the fields have.
+	 */
 	public int getColumns() { return columns; }
-	public void setColumns(int columns) { this.columns = columns; }
+	//public void setColumns(int columns) { this.columns = columns; }
 	
+	/**
+	 * Retrieve the current number of flags available for the field.
+	 * 
+	 * @return		The current number of available flags.
+	 */
 	public int getNumFlags() { return numFlags; }
-	public void setNumFlags(int numFlags) { this.numFlags = numFlags; }
+	//public void setNumFlags(int numFlags) { this.numFlags = numFlags; }
 	
+	/**
+	 * Retrieve the number of mines on the field.
+	 * 
+	 * @return		The number of mines.
+	 */
 	public int getNumBombs() { return numBombs; }
-	public void setNumBombs(int numBombs) { this.numBombs = numBombs; }
+	//public void setNumBombs(int numBombs) { this.numBombs = numBombs; }
 	
+	/**
+	 * Retrieve the 'game over' indicator.
+	 * 
+	 * @return		True if the game is over; False if not.
+	 */
 	public boolean isGameOver() { return gameover; }
+	
+	/**
+	 * Indicate the game is over.
+	 * 
+	 * Sets the 'game over' indicator to True.
+	 */
 	public void gameOver() { gameover = true; }
 	
+	/**
+	 * Retrieve the 'mine found' indicator.
+	 * 
+	 * @return		True if a mine was found on the field; False otherwise.
+	 */
 	public boolean isMineFound() { return mine_found; }
+	
+	/**
+	 * Indicate a mine was found on the field.
+	 * 
+	 * Sets the 'mine found' indicator to true.
+	 */
 	public void mineFound() { mine_found = true; }
 	
+	/**
+	 * Retrieve the visible field array.
+	 * 
+	 * Returns the 2D array of visibility values for the field.
+	 * 
+	 * @return		The 2D integer array of visibility values for the field.
+	 */
 	public int[][] getVisibleField() { return visible_field; }
+	
+	/**
+	 * Retrieve the mine field array.
+	 * 
+	 * Returns the 2D array of mine values for the field.
+	 *
+	 * @return		The 2D integer array of mine values for the field.
+	 */
 	public int[][] getMineField() { return mine_field; }
 	
+	/**
+	 * Decrease the number of available flags.
+	 */
 	public void placedFlag() { numFlags--; }
+	
+	/**
+	 * Increase the number of available flags.
+	 */
 	public void removedFlag() { numFlags++; }
 	
+	/**
+	 * Retrieve the visibility value of a cell.
+	 * 
+	 * Using the given row (x) and column (y) values of a cell, this function will return the
+	 * value stored in the visible field array. If the cell values do not exist in the array,
+	 * the function will return -1.
+	 * 
+	 * @param x		The row value of the cell.
+	 * @param y		The column value of the cell.
+	 * @return		The visibility value at index [x, y]; -1 if index [x, y] does not exist.
+	 */	
 	public int getVisibleValue(int x, int y){
 		try{
 			return visible_field[x][y];
@@ -185,6 +254,18 @@ public class Minefield{
 		}
 	}
 	
+	/**
+	 * Set the visibility value of a cell.
+	 * 
+	 * Using the given row (x) and column (y) values of a cell, this function will set the
+	 * value of the cell in the visibility field to the given visibility value. If the cell 
+	 * values do not exist in the array, the function will return -1.
+	 * 
+	 * @param x				The row value of the cell.
+	 * @param y				The column value of the cell.
+	 * @param visibility	The desired visibility value at index [x, y]; -1 if index [x, y]
+	 * 						does not exist.
+	 */	
 	public int setVisibleValue(int x, int y, int visibility){
 		try{
 			if (visibility < Constants.CELL_TYPE_REVEAL || visibility > Constants.CELL_TYPE_QUESTION)
@@ -199,13 +280,24 @@ public class Minefield{
 		}
 	}
 	
+	/**
+	 * Retrieve the mine value of a cell.
+	 * 
+	 * Using the given row (x) and column (y) values of a cell, this function will return the
+	 * value stored in the mine field array. If the cell values do not exist in the array,
+	 * the function will return -1.
+	 * 
+	 * @param x		The row value of the cell.
+	 * @param y		The column value of the cell.
+	 * @return		The mine value at index [x, y]; -1 if index [x, y] does not exist.
+	 */	
 	public int getMineValue(int x, int y){
 		try{
 			return mine_field[x][y];
 		}
 		catch(ArrayIndexOutOfBoundsException e){
 			System.out.println(e.getMessage());
-			return 0;
+			return -1;
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
@@ -213,6 +305,18 @@ public class Minefield{
 		}
 	}
 	
+	/**
+	 * Set the mine value of a cell.
+	 * 
+	 * Using the given row (x) and column (y) values of a cell, this function will set the
+	 * value of the cell in the mine field to the given mine value. If the cell values do not 
+	 * exist in the array, the function will return -1.
+	 * 
+	 * @param x				The row value of the cell.
+	 * @param y				The column value of the cell.
+	 * @param visibility	The desired mine value at index [x, y]; -1 if index [x, y] does 
+	 * 						not exist.
+	 */	
 	public int setMineValue(int x, int y, int mine_value){
 		try{
 			if (mine_value < Constants.SHOW_MINE || mine_value > 8)
@@ -227,6 +331,15 @@ public class Minefield{
 		}
 	}
 	
+	/**
+	 * Set both arrays, indicators and available flags to their default values.
+	 * 
+	 * The number of available flags will be set to the number of mines in the field (as its
+	 * maximum), and the 'game over' and 'mine found' indicators will be set to False. Each 
+	 * 2D-index of both the visibility and mine fields will be set to their default values: 
+	 * the visibility value is defaulted to the standard "HIDDEN" value; the mine value is
+	 * defaulted to 0 (indicating a "blank space").
+	 */
 	public void resetField() {
 		numFlags = numBombs;
 		gameover = mine_found = false;
@@ -236,110 +349,12 @@ public class Minefield{
 			Arrays.fill(mine_field[a],0);
 		}
 	}
-	/*
-	public void resetGame(){
-		generateField();
-	}
-	*/
-
-	/*
-	public void reveal(int x, int y){
-		if ( gameover ) { return; }
-		
-		int vfcValue = 0;
-		
-		try{
-			vfcValue = visible_field[x][y];
-			
-			if (vfcValue == 0)
-				throw new IllegalStateException("Cell has already been revealed");
-		}
-		catch(Exception e){
-			System.out.println(e.getMessage());
-			return;
-		}
-		
-		if(vfcValue == 2)
-			numFlags++;
-		
-		visible_field[x][y] = 0;
-		
-		switch(mine_field[x][y]){
-			case -1: mine_found = true;
-					 mineReveal();
-					 break;
-			case 0: blankReveal(x, y);
-		}
-		
-		if(mine_found || minesLastStanding())
-			gameover = true;
-	}
-	*/
-	/*
-	public void toggleFlag(int x, int y){
-		if ( gameover ) { return; }
-		
-		int vfcValue = 0;
-		
-		try{
-			vfcValue = visible_field[x][y];
-			
-			if (vfcValue == 0)
-				throw new IllegalStateException("Cell has already been revealed");
-		}
-		catch(Exception e){
-			System.out.println(e.getMessage());
-			return;
-		}
-		
-		try{
-			if(vfcValue == 1){
-				if (numFlags == 0)
-					throw new IllegalStateException("Maximum number of flags reached.");
-				visible_field[x][y] = 2;
-				numFlags--;
-			}
-			else if(vfcValue == 2){
-				if (numFlags == numBombs)
-					throw new IllegalStateException("Error: Flag state is incorrect - no flags should be present.");
-				
-				visible_field[x][y] = 1;
-				numFlags++;
-			}
-		}
-		catch(IllegalStateException e){
-			System.out.println(e.getMessage());
-			return;
-		}
-	}
 	
-	private void blankReveal(int x, int y){
-		int x_neighbor = 0,
-		    y_neighbor = 0;
-		
-		for (x_neighbor = x - 1; x_neighbor < x + 2; x_neighbor++){
-			if (x_neighbor == rows)
-				break;
-			if (x_neighbor < 0)
-				continue;
-			
-			for (y_neighbor = y - 1; y_neighbor < y + 2; y_neighbor++){
-				if(y_neighbor == columns)
-					break;
-				if(y_neighbor < 0 || visible_field[x_neighbor][y_neighbor] == 0)
-					continue;
-				
-				if(visible_field[x_neighbor][y_neighbor] == 2)
-					numFlags++;
-				
-				visible_field[x_neighbor][y_neighbor] = 0;
-				
-				if(mine_field[x_neighbor][y_neighbor] == 0)
-					blankReveal(x, y);
-			}
-		}
-	}
-*/	
+	/**
+	 * Determine whether the remaining hidden cells on the field are all hiding mines.
+	 * 
+	 * @return		True if all remaining hidden cells have a mine; False otherwise.
+	 */
 	public boolean minesLastStanding(){
 		int numLeft = 0;
 		
@@ -356,24 +371,4 @@ public class Minefield{
 		
 		return true;
 	}
-/*	
-	private void mineReveal(){
-		if(!mine_found) { return; }
-		
-		int mines = 0;
-		
-		for(int r = 0; r < rows; r++){
-			for(int c = 0; c < columns; c++){
-				if(mine_field[r][c] != -1)
-					continue;
-				
-				visible_field[r][c] = 0;
-				mines++;
-				
-				if(mines == numBombs)
-					return;
-			}
-		}
-	}
-*/
 }
