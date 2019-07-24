@@ -174,9 +174,9 @@ public class Counter extends JPanel {
 	 */
 	public static void loadFont() {
 		// Load font from file
-		File file = new File("./fonts/digital-7 (mono).ttf");  
+		//File file = new File(ClassLoader.getResourceAsStream("./fonts/digital-7 (mono).ttf"));  
 		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, file);
+			font = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("fonts/digital-7 (mono).ttf"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

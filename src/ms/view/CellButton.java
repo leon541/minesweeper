@@ -21,27 +21,27 @@ public class CellButton extends JButton {
 	private int iconIndex; 
 	
 	public static ImageIcon [] ICONS_COVERED = {
-			new ImageIcon("images/blank.png"),  //
-			new ImageIcon("images/blank.png"),  // 1 
-			new ImageIcon("images/flag.png"),   // 2
-			new ImageIcon("images/unknown.png"), // 3
+			new ImageIcon(ClassLoader.getSystemResource("images/blank.png")),  //
+			new ImageIcon(ClassLoader.getSystemResource("images/blank.png")),  // 1 
+			new ImageIcon(ClassLoader.getSystemResource("images/flag.png")),   // 2
+			new ImageIcon(ClassLoader.getSystemResource("images/unknown.png")), // 3
 	};
 
 	public static ImageIcon[] ICONS_MINES = {
-			new ImageIcon("images/mine.png"),
-			new ImageIcon("images/mine_click.png")
+			new ImageIcon(ClassLoader.getSystemResource("images/mine.png")),
+			new ImageIcon(ClassLoader.getSystemResource("images/mine_click.png"))
 	};
 
 	public static ImageIcon[] ICONS_REVEALED = {		
-			new ImageIcon("images/m0.png"),
-			new ImageIcon("images/m1.png"),
-			new ImageIcon("images/m2.png"),
-			new ImageIcon("images/m3.png"),
-			new ImageIcon("images/m4.png"),
-			new ImageIcon("images/m5.png"),
-			new ImageIcon("images/m6.png"),
-			new ImageIcon("images/m7.png"),
-			new ImageIcon("images/m8.png"),
+			new ImageIcon(ClassLoader.getSystemResource("images/m0.png")),
+			new ImageIcon(ClassLoader.getSystemResource("images/m1.png")),
+			new ImageIcon(ClassLoader.getSystemResource("images/m2.png")),
+			new ImageIcon(ClassLoader.getSystemResource("images/m3.png")),
+			new ImageIcon(ClassLoader.getSystemResource("images/m4.png")),
+			new ImageIcon(ClassLoader.getSystemResource("images/m5.png")),
+			new ImageIcon(ClassLoader.getSystemResource("images/m6.png")),
+			new ImageIcon(ClassLoader.getSystemResource("images/m7.png")),
+			new ImageIcon(ClassLoader.getSystemResource("images/m8.png")),
 	};
 
 	public CellButton(int row, int col ) {

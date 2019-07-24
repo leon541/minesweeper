@@ -34,10 +34,10 @@ public class BoardView implements View, MouseListener, ActionListener {
 	private final int CELL_SIZE = 25;
 
 	public static ImageIcon [] ICON_FACES = { 
-			new ImageIcon("images/facesmile.png"), // 0
-			new ImageIcon("images/facesmile.png"), // 1
-			new ImageIcon("images/facewin.png"),  // 2
-			new ImageIcon("images/facelose.png")   // 3
+			new ImageIcon(ClassLoader.getSystemResource("images/facesmile.png")), // 0
+			new ImageIcon(ClassLoader.getSystemResource("images/facesmile.png")), // 1
+			new ImageIcon(ClassLoader.getSystemResource("images/facewin.png")),  // 2
+			new ImageIcon(ClassLoader.getSystemResource("images/facelose.png"))   // 3
 	};
 	// UI components
 	private JFrame mainFrame; // main Frame
