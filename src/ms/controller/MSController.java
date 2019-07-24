@@ -59,7 +59,10 @@ public class MSController implements Controller {
 	 * @param view		The 'View' object to be set to this Controller.
 	 */
 	public void setView(View view) {
-		this.view = view; 
+		this.view = view;
+		if(board != null)
+			view.updateCounter(board.getNumFlags());
+
 	}
 	
 	/**
@@ -84,7 +87,8 @@ public class MSController implements Controller {
 			board = new Minefield(rows, cols, mines);
 		else
 			board.resetField();
-		view.updateCounter(board.getNumFlags());
+		if(view != null)
+			view.updateCounter(board.getNumFlags());
 		//generateField();
 		firstClick = true;
 		gameStatus = Constants.GAME_STATUS_READY;
