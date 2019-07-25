@@ -3,6 +3,7 @@ package ms.controller;
 import ms.Constants;
 import ms.view.*;
 import ms.model.Minefield;
+
 /**
  * @author      Preston, Robert (RP1211) 
  */
@@ -58,21 +59,6 @@ public class MSController implements Controller {
 		}
 	}
 	
-	/*
-	public MSController(View view) {
-		try {
-			this.view = view;
-
-			configure(view.getRows(), view.getColumns(), view.getMines());
-			
-			view.updateCounter(board.getNumFlags());
-		}
-		catch(Exception e){
-			System.out.println(e.getMessage());
-		}
-	}
-	*/
-	
 	/**
 	 * Sets the View object for this MSController
 	 * 
@@ -110,7 +96,7 @@ public class MSController implements Controller {
 			board.resetField();
 		if(view != null)
 			view.updateCounter(board.getNumFlags());
-		//generateField();
+
 		firstClick = true;
 		gameStatus = Constants.GAME_STATUS_READY;
 	}
