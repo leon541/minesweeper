@@ -190,7 +190,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 			if(keys[0] && keys[1] ){
 				System.out.println("Left + Right Pressed:");
 
-				int clickResult = this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_BOTH);
+		       controller.clickedGrid(row, col, Constants.CLICK_TYPE_BOTH);
 				//handleClickResult(clickResult);
 				updateView();
 			}
@@ -207,7 +207,8 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 			if(keys[0] && !keys[1] ){
 				System.out.println("Left Button release: " + row + "," + col);
-				int clickResult = controller.clickedGrid(row, col, Constants.CLICK_TYPE_LEFT);
+				controller.clickedGrid(row, col, Constants.CLICK_TYPE_LEFT);
+				
 				this.updateView();
 				//handleClickResult(clickResult);
 				keys[0] = false;
@@ -358,32 +359,8 @@ public class BoardView implements View, MouseListener, ActionListener {
 		}
 	}
 
-	/**
-	 * update number of mine counter
-	 * @Override
-	 */
-	public void updateCounter(int numberOfMines) {
-		this.numberOfMines.setValue(numberOfMines);
-	}
 	
 	
-	/**
-	 * update view according to click result from Controller 
-	 * 
-	 * @param result
-	 */
-	private void handleClickResult(int result) {
-		if (result == Constants.GAME_STATUS_ONGOING && !timerCounter.isTimerStarted()) {
-			timerCounter.startTimer();
-		} else if (result == Constants.GAME_STATUS_LOSE) { // 3
-			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_LOSE]);
-			timerCounter.stopTimer();
-		} else if (result == Constants.GAME_STATUS_WIN) { // 2
-			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_WIN]);
-			timerCounter.stopTimer();
-		}
-	}
-
 	/**
 	 * reset the board when click the smily face
 	 * this is done without condition or popup
@@ -411,10 +388,28 @@ public class BoardView implements View, MouseListener, ActionListener {
 	
 	// update view after each click 
 	public void updateView() {
+		
+		// update cells 
 		for(int row = 0; row < model.getRows() ; row++ ) {
 			for(int col = 0; col < model.getColumns(); col++) {
 				this.cellButtons[row][col].updateIcon(model.getVisibleValue(row, col), model.getMineValue(row, col));
 			}
+		} 
+		// counter 
+		int flags = model.getNumFlags();
+		if(flags != this.numberOfMines.getValue())  {
+			this.numberOfMines.setValue(flags);
+		}
+		//  smile and timer
+		int gameState = model.getGameState() ;
+		if (gameState == Constants.GAME_STATUS_ONGOING && !timerCounter.isTimerStarted()) {
+			timerCounter.startTimer();
+		} else if (gameState  == Constants.GAME_STATUS_LOSE) { // 3
+			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_LOSE]);
+			timerCounter.stopTimer();
+		} else if (gameState == Constants.GAME_STATUS_WIN) { // 2
+			this.resetButton.setIcon(ICON_FACES[Constants.GAME_STATUS_WIN]);
+			timerCounter.stopTimer();
 		}
 	}
 	

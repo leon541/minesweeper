@@ -32,12 +32,12 @@ public class Game {
 		//controller = new DummyController();
 		
 		model = new Minefield();
+		
 		view = new BoardView();
 		view.setModel(model);
 		
-		controller = new MSController();
-		controller.setView(view);
-	
+		controller = new MSController(model);
+		
 		controller.start();
 	}
 }
