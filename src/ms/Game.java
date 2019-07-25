@@ -37,6 +37,7 @@ public class Game {
 		view.setModel(model);
 		
 		controller = new MSController(model);
+		view.setController(controller);
 		
 		controller.start();
 	}

@@ -30,8 +30,6 @@ import javax.swing.JMenu;
  */
 public class BoardView implements View, MouseListener, ActionListener {
 
-	private static final long serialVersionUID = 1L;
-
 	private final int CELL_SIZE = 25;
 
 	public static ImageIcon [] ICON_FACES = { 
@@ -216,6 +214,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 			if(!keys[0]  && keys[1] ){
 				System.out.println("Right Button release: " + row + "," + col);
 				this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_RIGHT);
+				this.updateView();
 				keys[1] = false;
 			}
 			if(keys[0] && keys[1]){
