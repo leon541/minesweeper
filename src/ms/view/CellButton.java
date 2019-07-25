@@ -70,15 +70,24 @@ public class CellButton extends JButton {
 	 * @param under
 	 */
 	public void updateIcon(int cover, int under) {
-		if(cover > 0 ) {
-			setIcon(ICONS_COVERED[cover]);
-		} else if (under >= 0){
-			setIcon(ICONS_REVEALED[under]);
-		} else if (under == Constants.SHOW_MINE) {
-			setIcon(ICONS_MINES[0]);
-		} else if(under ==  Constants.SHOW_MINE_FIRED) {
-			setIcon(ICONS_MINES[1]);
+		ImageIcon newIcon = getNewIcon(cover, under);
+		if(this.getIcon() != newIcon ) {
+			setIcon(newIcon);
 		}
+	}
+	
+	public ImageIcon getNewIcon(int cover, int under) {
+		if(cover > 0 ) {
+			return  (ICONS_COVERED[cover]);
+		} else if (under >= 0){
+			return ICONS_REVEALED[under];
+		} else if (under == Constants.SHOW_MINE) {
+			return ICONS_MINES[0];
+		} else if(under ==  Constants.SHOW_MINE_FIRED) {
+			return  ICONS_MINES[1];
+		}
+		return null;
+		
 	}
 	
 	/**

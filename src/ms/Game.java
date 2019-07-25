@@ -14,6 +14,7 @@ public class Game {
 
 	Controller controller;
 	View view;
+	Minefield model;
 	
 	/**
 	 * entry of the game  
@@ -29,11 +30,14 @@ public class Game {
 	 */
 	public Game() {
 		//controller = new DummyController();
-		controller = new MSController();
-		view = new BoardView();
-		view.setController(controller);
 		
+		model = new Minefield();
+		view = new BoardView();
+		view.setModel(model);
+		
+		controller = new MSController();
 		controller.setView(view);
+	
 		controller.start();
 	}
 }

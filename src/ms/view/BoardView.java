@@ -3,6 +3,7 @@ package ms.view;
 
 import ms.Constants;
 import ms.controller.Controller;
+import ms.model.Minefield;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -47,6 +48,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 	JButton resetButton ; 
 	// controller
 	Controller controller;
+	Minefield model; 
 	// game specs
 	int rows, cols, mines;  
 	
@@ -189,7 +191,8 @@ public class BoardView implements View, MouseListener, ActionListener {
 				System.out.println("Left + Right Pressed:");
 
 				int clickResult = this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_BOTH);
-				handleClickResult(clickResult);
+				//handleClickResult(clickResult);
+				updateView();
 			}
 		}
 
@@ -205,7 +208,8 @@ public class BoardView implements View, MouseListener, ActionListener {
 			if(keys[0] && !keys[1] ){
 				System.out.println("Left Button release: " + row + "," + col);
 				int clickResult = controller.clickedGrid(row, col, Constants.CLICK_TYPE_LEFT);
-				handleClickResult(clickResult);
+				this.updateView();
+				//handleClickResult(clickResult);
 				keys[0] = false;
 			}
 			if(!keys[0]  && keys[1] ){
@@ -233,7 +237,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 	}
 
-	@Override
+	
 	public int updateCell(int row, int col, int cover, int under) {
 		this.cellButtons[row][col].updateIcon(cover, under);
 		return 0;
@@ -397,4 +401,23 @@ public class BoardView implements View, MouseListener, ActionListener {
 			timerCounter.reset();
 		}
 	}
+
+	@Override
+	public void setModel(Minefield model) {
+		// TODO Auto-generated method stub
+		this.model = model;		
+	}
+	
+	
+	// update view after each click 
+	public void updateView() {
+		for(int row = 0; row < model.getRows() ; row++ ) {
+			for(int col = 0; col < model.getColumns(); col++) {
+				this.cellButtons[row][col].updateIcon(model.getVisibleValue(row, col), model.getMineValue(row, col));
+			}
+		}
+	}
+	
+	 
+	
 }

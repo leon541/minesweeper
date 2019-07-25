@@ -1,7 +1,5 @@
 package ms.controller;
 
-import ms.view.View;
-
 public interface Controller {
 	/**
 	 * 
@@ -12,7 +10,7 @@ public interface Controller {
 	 * @param type    0: left, 1: right, 2: left + right
 	 * @return        
 	 */
-	int clickedGrid(int row, int col, int type) ;
+	void  clickedGrid(int row, int col, int type) ;
 	
 	/**
 	 * 
@@ -26,9 +24,5 @@ public interface Controller {
 	 * 
 	 */
 	void start();
-	
-	/**
-	 * 
-	 */
-	void setView(View view);
+
 }
