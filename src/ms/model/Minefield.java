@@ -25,6 +25,8 @@ public class Minefield{
 	private boolean gameover;
 	/** Indicator if a mine was revealed. */
 	private boolean mine_found;
+	/** The current state of the game. */
+	private int gameState;
 	
 	/**
 	 * Default no-argument constructor of Minefield.
@@ -69,6 +71,7 @@ public class Minefield{
 		this.numFlags = m.numFlags;
 		this.gameover = m.gameover;
 		this.mine_found = m.mine_found;
+		this.gameState = m.gameState;
 	}
 	
 	/**
@@ -204,6 +207,36 @@ public class Minefield{
 	 * Sets the 'mine found' indicator to true.
 	 */
 	public void mineFound() { mine_found = true; }
+	
+	/**
+	 * Retrieve the current status of the game.
+	 * 
+	 * @return		The integer representing the current game status.
+	 */
+	public int getGameState() { return gameState; }
+	
+	/**
+	 * Update the current status of the game.
+	 * 
+	 * Based on the 'mine found' and 'game over' indicators, the game status will be updated
+	 * accordingly. If the game status already show the game has ended, nothing happens; if
+	 * the game has not ended, the status is set to "Ongoing"; if the game has ended but no 
+	 * mine was found, the status is set to "Win"; otherwise, the game ended with a mine being
+	 * found, thus the status is set to "Lose".
+	 */
+	public void updateGameState() {
+		if(gameState > Constants.GAME_STATUS_ONGOING) { return; }
+		
+		gameState = Constants.GAME_STATUS_ONGOING;
+		
+		if(!gameover) { return; }
+		
+		gameState++;
+		
+		if(!mine_found) { return; }
+			
+		gameState++;
+	}
 	
 	/**
 	 * Retrieve the visible field array.
@@ -343,6 +376,7 @@ public class Minefield{
 	public void resetField() {
 		numFlags = numBombs;
 		gameover = mine_found = false;
+		gameState = Constants.GAME_STATUS_READY;
 		
 		for(int a = 0; a < rows; a++){
 			Arrays.fill(visible_field[a], Constants.CELL_TYPE_HIDDEN);
