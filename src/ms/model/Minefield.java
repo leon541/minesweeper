@@ -332,11 +332,11 @@ public class Minefield{
 		}
 		catch(ArrayIndexOutOfBoundsException e){
 			System.out.println(e.getMessage());
-			return -1;
+			return -3;
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
-			return -2;
+			return -4;
 		}
 	}
 	
@@ -354,7 +354,7 @@ public class Minefield{
 	 */	
 	public int setMineValue(int x, int y, int mine_value){
 		try{
-			if (mine_value < Constants.SHOW_MINE || mine_value > 8)
+			if (mine_value < Constants.SHOW_MINE_FIRED || mine_value > 8)
 				throw new IllegalArgumentException("Error: unknown mine cell type value of " + mine_value + ".");
 			
 			mine_field[x][y] = mine_value;
