@@ -367,6 +367,27 @@ public class Minefield{
 	}
 	
 	/**
+	 * Rebuilds the field based on the given number of rows, columns and mines.
+	 * 
+	 * Reconstructs the fields using the given number of rows, columns and mines. The fields, 
+	 * status and indicators are then set to their default values.
+	 * 
+	 * @param rows
+	 * @param columns
+	 * @param numBombs
+	 */
+	public void redoField(int rows, int columns, int numBombs) {
+		this.columns = columns;
+		this.rows = rows;
+		this.numBombs = numBombs;
+		
+		visible_field = new int[rows][columns];
+		mine_field = new int[rows][columns];
+		
+		resetField();		
+	}
+	
+	/**
 	 * Set both arrays, state, indicators and available flags to their default values.
 	 * 
 	 * The number of available flags will be set to the number of mines in the field (as its

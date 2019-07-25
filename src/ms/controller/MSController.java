@@ -76,8 +76,10 @@ public class MSController implements Controller {
 	 */
 	@Override
 	public void configure(int rows, int cols, int mines) {
-		if(board == null || board.getRows() != rows || board.getColumns() != cols || board.getNumBombs() != mines)
+		if(board == null)
 			board = new Minefield(rows, cols, mines);
+		else if(board.getRows() != rows || board.getColumns() != cols || board.getNumBombs() != mines)
+			board.redoField(rows, cols, mines);
 		else
 			board.resetField();
 
