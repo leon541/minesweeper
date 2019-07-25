@@ -156,7 +156,7 @@ public class MSController implements Controller {
 				case Constants.SHOW_MINE: // If mine is revealed, run game loss functions;
 										  board.mineFound();	
 				                          mineReveal();
-				                          mfcValue--;
+				                          board.setMineValue(row, col, --mfcValue);
 				                          break;
 				case 0: blankReveal(row, col);		// If a blank space is revealed, run blankReveal function on cell;
 				}									// Otherwise, do nothing else.				
@@ -361,7 +361,7 @@ public class MSController implements Controller {
 			case Constants.SHOW_MINE: // If the adjacent cell is a mine, run the game loss functions;
 									  board.mineFound();
 									  mineReveal();
-									  mfcValue--;
+									  board.setMineValue(cell[0], cell[1], --mfcValue);
 									  break;
 			case 0: blankReveal(cell[0], cell[1]);		// If the adjacent cell is a blank space, run the blankReveal function;
 			}											// Otherwise, do nothing else.				
