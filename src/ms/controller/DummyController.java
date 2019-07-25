@@ -16,22 +16,22 @@ public class DummyController implements Controller {
 	int cover = 1; 
 	int under  = 0; 
 	@Override
-	public int clickedGrid(int row, int col, int type) {
+	public void clickedGrid(int row, int col, int type) {
 		// TODO Auto-generated method stub
 		if(type == Constants.CLICK_TYPE_RIGHT) {
 			// rotate cover
-			view.updateCell(row, col, cover, 0);
+			//view.updateCell(row, col, cover, 0);
 			if(++cover > 3) 
 				cover = 1; 
 			
 		} else if( type == Constants.CLICK_TYPE_LEFT) {
 			// rotate under
-			view.updateCell(row, col, 0, under);
+			//view.updateCell(row, col, 0, under);
 			if(++under > 8) 
 				under = -2;
 			
 		}
-		return 0;
+		//return 0;
 	}
 
 	@Override

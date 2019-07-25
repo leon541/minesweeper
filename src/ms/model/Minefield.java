@@ -365,7 +365,7 @@ public class Minefield{
 	}
 	
 	/**
-	 * Set both arrays, indicators and available flags to their default values.
+	 * Set both arrays, state, indicators and available flags to their default values.
 	 * 
 	 * The number of available flags will be set to the number of mines in the field (as its
 	 * maximum), and the 'game over' and 'mine found' indicators will be set to False. Each 

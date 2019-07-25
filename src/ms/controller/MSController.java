@@ -1,7 +1,6 @@
 package ms.controller;
 
 import ms.Constants;
-import ms.view.*;
 import ms.model.Minefield;
 
 /**
@@ -9,50 +8,36 @@ import ms.model.Minefield;
  */
 public class MSController implements Controller {
 
-	/** The 'View' object associated with the Controller. */
-	View view;
 	/** The 'Model' board of the game associated with the Controller. */
 	Minefield board;
-	/** The current game status value, as maintained by the Controller. */
-	private int gameStatus;
 	/** The first click indicator, as maintained by the Controller. */
 	private boolean firstClick;
 	
 	/**
 	 * Default no-argument constructor of MSController
 	 * 
-	 * Initializes the board and game states at the default 'Intermediate' values.
-	 * (See LEVEL_PARAMETERS in 'Constants.java')
-	 * 
+	 * Initializes the board at the default 'Intermediate' values. (See LEVEL_PARAMETERS in 
+	 * 'Constants.java')
 	 */
 	public MSController() {
-		view = new BoardView(Constants.LEVEL_INTERMEDIATE);
-		
 		int[] base = Constants.LEVEL_PARAMETERS[Constants.LEVEL_INTERMEDIATE];
 		configure(base[0], base[1], base[2]);
-		
-		view.updateCounter(board.getNumFlags());
 	}
 	
 	/**
 	 * Difficulty-based constructor of MSController
 	 * 
-	 * Initializes the board and game states at the given difficulty level. If the
-	 * level is not recognized as a proper difficulty value, the game will not
-	 * initialize: otherwise, the values associated to the difficulty level will be
-	 * used to initialize the board and game states. (See LEVEL_PARAMETERS in 
-	 * 'Constants.java')
+	 * Initializes the board at the given difficulty level. If the level is not recognized 
+	 * as a proper difficulty value, the game will not initialize: otherwise, the values 
+	 * associated to the difficulty level will be used to initialize the board. (See 
+	 * LEVEL_PARAMETERS in 'Constants.java')
 	 * 
 	 * @param level		The difficulty value to initialize the game.
 	 */
 	public MSController(int level) {
 		try {
-			view = new BoardView(level);
-
 			int[] base = Constants.LEVEL_PARAMETERS[level];
 			configure(base[0], base[1], base[2]);
-			
-			view.updateCounter(board.getNumFlags());
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
@@ -60,16 +45,17 @@ public class MSController implements Controller {
 	}
 	
 	/**
-	 * Sets the View object for this MSController
+	 * Board-based constructor of MSController
 	 * 
-	 * Initializes the view of this Controller to view, the given 'View' object.
+	 * Initializes the board to the given 'Minefield' object, and configures the 'first click'
+	 * indicator based on its game state.
 	 * 
-	 * @param view		The 'View' object to be set to this Controller.
+	 * @param board		The 'Minefield' object to be the board.
 	 */
-	public void setView(View view) {
-		this.view = view;
-		if(board != null)
-			view.updateCounter(board.getNumFlags());
+	public MSController(Minefield board) {
+		this.board = board;
+		
+		firstClick = board.getGameState() == Constants.GAME_STATUS_READY;
 	}
 	
 	/**
@@ -94,11 +80,8 @@ public class MSController implements Controller {
 			board = new Minefield(rows, cols, mines);
 		else
 			board.resetField();
-		if(view != null)
-			view.updateCounter(board.getNumFlags());
 
 		firstClick = true;
-		gameStatus = Constants.GAME_STATUS_READY;
 	}
 
 	@Override
@@ -137,11 +120,9 @@ public class MSController implements Controller {
 	 * @return			The current game status via the gameStatus variable, or -1.
 	 */
 	@Override
-	public int clickedGrid(int row, int col, int type) {
+	public void clickedGrid(int row, int col, int type) {
 		// Return if the game has already ended.
-		if ( gameStatus > Constants.GAME_STATUS_ONGOING ) {
-			return gameStatus;
-		}
+		if ( board.getGameState() > Constants.GAME_STATUS_ONGOING ) { return ; }
 		
 		int vfcValue = 0;
 		
@@ -150,8 +131,8 @@ public class MSController implements Controller {
 			vfcValue = board.getVisibleValue(row, col);			
 		}
 		catch(Exception e){
-			System.out.println(e.getMessage());
-			return -1;
+			System.out.println(e.toString());
+			return;
 		}
 		
 		// Perform the functions from on the click type and visible value of the cell.
@@ -159,7 +140,7 @@ public class MSController implements Controller {
 			// Actions taken if a left-click is made on a non-revealed cell.
 			if (type == Constants.CLICK_TYPE_LEFT && vfcValue != Constants.CELL_TYPE_REVEAL) {
 				switch(vfcValue) {
-				case Constants.CELL_TYPE_FLAG: return gameStatus;						// If the cell is flagged, do nothing and return;
+				case Constants.CELL_TYPE_FLAG: return;									// If the cell is flagged, do nothing and return;
 				default: board.setVisibleValue(row, col, Constants.CELL_TYPE_REVEAL);   // Otherwise, reveal the cell on the board.
 				}
 				
@@ -175,13 +156,10 @@ public class MSController implements Controller {
 				case Constants.SHOW_MINE: // If mine is revealed, run game loss functions;
 										  board.mineFound();	
 				                          mineReveal();
-				                          gameStatus = Constants.GAME_STATUS_LOSE;
 				                          mfcValue--;
 				                          break;
 				case 0: blankReveal(row, col);		// If a blank space is revealed, run blankReveal function on cell;
-				}									// Otherwise, do nothing else.
-					
-				view.updateCell(row, col, Constants.CELL_TYPE_REVEAL, mfcValue);	// Update view of revealed cell.
+				}									// Otherwise, do nothing else.				
 			}
 			
 			// Actions taken if a right-click is made on any cell.
@@ -192,7 +170,6 @@ public class MSController implements Controller {
 												     vfcValue++;
 												 else {
 												     board.placedFlag();
-													 view.updateCounter(board.getNumFlags());
 												 }
 				                                 break;
 				case Constants.CELL_TYPE_FLAG: // If cell is a flagged hidden cell, toggle flag off hidden cell;
@@ -200,7 +177,6 @@ public class MSController implements Controller {
 					                               throw new IllegalStateException("Error: Flag state is incorrect - no flags should be on the board.");
 											  
 											   board.removedFlag();
-											   view.updateCounter(board.getNumFlags());
 				}	// Otherwise, do nothing for the moment.
 				
 				// Verify if clicked cell is a hidden cell (regardless if it is marked).
@@ -208,7 +184,6 @@ public class MSController implements Controller {
 					// For a hidden cell, rotate and update the marker value of the hidden cell on the board.
 				    vfcValue = (vfcValue % 3) + 1;
 					board.setVisibleValue(row, col, vfcValue);
-					view.updateCell(row, col, vfcValue, 0);
 				}
 			}
 			
@@ -219,8 +194,8 @@ public class MSController implements Controller {
 			// Other pairings will result in no actions needed to be taken.
 		}
 		catch(Exception e){
-			System.out.println(e.getMessage());
-			return -1;
+			System.out.println(e.toString());
+			return;
 		}
 		
 		// Verify if End-of-Game conditions have been met.
@@ -231,12 +206,7 @@ public class MSController implements Controller {
 		}
 		
 		// Update game status based on results of the click
-		if(board.isGameOver() && gameStatus != Constants.GAME_STATUS_LOSE)
-			gameStatus = Constants.GAME_STATUS_WIN;
-		else if(gameStatus == Constants.GAME_STATUS_READY)
-			gameStatus = Constants.GAME_STATUS_ONGOING;
-		
-		return gameStatus;
+		board.updateGameState();
 	}
 	
 	/**
@@ -270,7 +240,6 @@ public class MSController implements Controller {
 				if (vfcValue != Constants.CELL_TYPE_REVEAL && vfcValue != Constants.CELL_TYPE_FLAG) {
 					// Reveal the cell hiding a mine.
 					board.setVisibleValue(r, c, Constants.CELL_TYPE_REVEAL);
-					view.updateCell(r, c, Constants.CELL_TYPE_REVEAL, Constants.SHOW_MINE);
 				}
 				
 				// Verify if all mines were found.
@@ -320,7 +289,6 @@ public class MSController implements Controller {
 				
 				// Reveal adjacent cell.
 				board.setVisibleValue(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL);
-				view.updateCell(x_neighbor, y_neighbor, Constants.CELL_TYPE_REVEAL, mfcValue);
 				
 				// Verify if the adjacent cell is also a blank space.
 				if(mfcValue == 0)
@@ -393,14 +361,11 @@ public class MSController implements Controller {
 			case Constants.SHOW_MINE: // If the adjacent cell is a mine, run the game loss functions;
 									  board.mineFound();
 									  mineReveal();
-									  gameStatus = Constants.GAME_STATUS_LOSE;
 									  mfcValue--;
 									  break;
 			case 0: blankReveal(cell[0], cell[1]);		// If the adjacent cell is a blank space, run the blankReveal function;
 			}											// Otherwise, do nothing else.				
-			
-			view.updateCell(cell[0], cell[1], Constants.CELL_TYPE_REVEAL, mfcValue);
-			
+						
 			// Verify if all adjacent cells have been processed.
 			if(--cells_in_area == 0)
 				break;
@@ -433,7 +398,6 @@ public class MSController implements Controller {
 				
 				// Flag the cell.
 				board.setVisibleValue(r, c, Constants.CELL_TYPE_FLAG);
-				view.updateCell(r, c, Constants.CELL_TYPE_FLAG, Constants.SHOW_MINE);
 			}
 	}
 	
