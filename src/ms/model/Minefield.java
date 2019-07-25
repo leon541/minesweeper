@@ -32,13 +32,15 @@ public class Minefield{
 	 * Default no-argument constructor of Minefield.
 	 * 
 	 * Initializes the fields and indicators at the default values (which are equivalent to
-	 * the "BEGINNER" level values in 'Constants.java').
+	 * the "INTERMEDIATE" level values in 'Constants.java').
 	 * 
 	 */
 	public Minefield(){
-		columns = 9;
-		rows = 9;
-	    numBombs = 10;
+		int[] default_param = Constants.LEVEL_PARAMETERS[Constants.LEVEL_INTERMEDIATE];
+		
+		columns = default_param[1];
+		rows = default_param[0];
+	    numBombs = default_param[2];
 		
 		visible_field = new int[rows][columns];
 		mine_field = new int[rows][columns];
