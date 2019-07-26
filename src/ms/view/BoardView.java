@@ -354,8 +354,9 @@ public class BoardView implements View, MouseListener, ActionListener {
 		} else if(e.getSource() instanceof JButton) {
 			System.out.println("reset");
 			reset();
-
 		}
+		updateView();
+		
 	}
 
 	
