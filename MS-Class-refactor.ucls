@@ -21,7 +21,7 @@
   </interface>  
   <class id="3" language="java" name="ms.controller.MSController" project="minesweeper" 
     file="/minesweeper/src/ms/controller/MSController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="704" y="927"/>    
+    <position height="-1" width="-1" x="715" y="541"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <class id="4" language="java" name="ms.model.Minefield" project="minesweeper" 
     file="/minesweeper/src/ms/model/Minefield.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1065" y="499"/>    
+    <position height="-1" width="-1" x="1063" y="588"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -48,7 +48,7 @@
   </interface>  
   <class id="6" language="java" name="ms.view.BoardView" project="minesweeper" 
     file="/minesweeper/src/ms/view/BoardView.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="427" y="800"/>    
+    <position height="-1" width="-1" x="419" y="845"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -74,83 +74,119 @@
     </display>  
   </class>  
   <association id="9">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="10" name="model"/>      
-      <multiplicity id="11" minimum="0" maximum="1"/>    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="10" name="controller">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="11" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="12">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="13" name="timerCounter"/>      
-      <multiplicity id="14" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="15">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="16" name="board"/>      
-      <multiplicity id="17" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="18">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="19" name="cellButtons"/>      
-      <multiplicity id="20" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="21">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="22" name="model"/>      
-      <multiplicity id="23" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="24">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="25" name="controller"/>      
-      <multiplicity id="26" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="27">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="2"/>  
-  </realization>  
-  <association id="28">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="29" name="controller"/>      
-      <multiplicity id="30" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="31">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="5"/>  
-  </realization>  
-  <association id="32">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="33" name="view"/>      
-      <multiplicity id="34" minimum="0" maximum="1"/>    
+      <attribute id="13" name="view">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="14" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="35">    
+  <realization id="15">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <association id="16">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="36" name="numberOfMines"/>      
-      <multiplicity id="37" minimum="0" maximum="1"/>    
+      <attribute id="17" name="model">        
+        <position height="0" width="0" x="-2" y="89"/>      
+      </attribute>      
+      <multiplicity id="18" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-2" y="89"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="19">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <association id="20">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="21" name="model">        
+        <position height="0" width="0" x="-2" y="89"/>      
+      </attribute>      
+      <multiplicity id="22" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-2" y="89"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="23">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="24" name="timerCounter">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="25" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="26">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="27" name="cellButtons">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="28" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="29">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="30" name="numberOfMines">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="31" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="32">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="33" name="controller">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="34" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="35">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="36" name="board">        
+        <position height="0" width="0" x="-2" y="89"/>      
+      </attribute>      
+      <multiplicity id="37" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-2" y="89"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

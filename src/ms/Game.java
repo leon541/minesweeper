@@ -29,14 +29,13 @@ public class Game {
 	 * Constructor
 	 */
 	public Game() {
-		//controller = new DummyController();
-		
+		// model
 		model = new Minefield();
-		
+		// controller
+		controller = new MSController(model);
+		// view
 		view = new BoardView();
 		view.setModel(model);
-		
-		controller = new MSController(model);
 		view.setController(controller);
 		
 		controller.start();

@@ -385,10 +385,13 @@ public class BoardView implements View, MouseListener, ActionListener {
 		this.model = model;		
 	}
 	
-	
-	// update view after each click 
+
+	/**
+	 * update view according to the Module
+	 * this is invoked after each click. 
+	 * 
+	 */
 	public void updateView() {
-		
 		// update cells 
 		for(int row = 0; row < model.getRows() ; row++ ) {
 			for(int col = 0; col < model.getColumns(); col++) {
@@ -412,7 +415,4 @@ public class BoardView implements View, MouseListener, ActionListener {
 			timerCounter.stopTimer();
 		}
 	}
-	
-	 
-	
 }

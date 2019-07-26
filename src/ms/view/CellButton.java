@@ -18,7 +18,7 @@ public class CellButton extends JButton {
 	
 	private int col;   // col location  
 	private int row;   // row localtion
-	private int iconIndex; 
+	
 	
 	public static ImageIcon [] ICONS_COVERED = {
 			new ImageIcon(ClassLoader.getSystemResource("images/blank.png")),  //
@@ -65,6 +65,8 @@ public class CellButton extends JButton {
 	
 	
 	/**
+	 * Update Icon according to cover and under value
+	 * only do when changes.
 	 * 
 	 * @param cover
 	 * @param under
@@ -76,6 +78,13 @@ public class CellButton extends JButton {
 		}
 	}
 	
+	/**
+	 * calculate the new Icon according to cover and under value
+	 *  
+	 * @param cover
+	 * @param under
+	 * @return
+	 */
 	public ImageIcon getNewIcon(int cover, int under) {
 		if(cover > 0 ) {
 			return  (ICONS_COVERED[cover]);
@@ -87,17 +96,5 @@ public class CellButton extends JButton {
 			return  ICONS_MINES[1];
 		}
 		return null;
-		
-	}
-	
-	/**
-	 * just for testing, 
-	 * rotate all possible images
-	 */
-	public void changeIcon() {
-		iconIndex++; 
-		if(iconIndex >= ICONS_REVEALED.length) 
-			iconIndex = 0; 
-		setIcon(ICONS_REVEALED[iconIndex]);
 	}
 }
