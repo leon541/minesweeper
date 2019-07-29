@@ -8,6 +8,7 @@ import ms.model.Minefield;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,10 +18,13 @@ import java.awt.event.MouseListener;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JMenuBar;
 import javax.swing.JRadioButtonMenuItem ;
+import javax.swing.JTextArea;
+import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 
 /**
@@ -53,6 +57,8 @@ public class BoardView implements View, MouseListener, ActionListener {
 	private static final String LEVEL_BEGINNER = "Beginner";
 	private static final String LEVEL_INTERMEDIATE = "Intermediate";
 	private static final String LEVEL_EXPERT = "Expert";
+	
+	private static final String HELP_CONTROLS = "Controls";
 	
 	/**
 	 * default constructor view 
@@ -179,13 +185,13 @@ public class BoardView implements View, MouseListener, ActionListener {
 			int row = gridButton.getRow();
 			int col = gridButton.getCol();
 
-			if(e.getButton() == MouseEvent.BUTTON1 && !keys[0]){
+			if(e.getButton() == MouseEvent.BUTTON1 && !keys[0]){ // left key down
 				keys[0] = true;
 			}
-			else if(e.getButton() == MouseEvent.BUTTON3 && !keys[1]){
+			else if(e.getButton() == MouseEvent.BUTTON3 && !keys[1]){ // right key down
 				keys[1] = true;
 			}
-			if(keys[0] && keys[1] ){
+			if(keys[0] && keys[1] ){ // both key down
 				System.out.println("Left + Right Pressed:");
 
 		       controller.clickedGrid(row, col, Constants.CLICK_TYPE_BOTH);
@@ -203,7 +209,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 			int row = gridButton.getRow();
 			int col = gridButton.getCol();
 
-			if(keys[0] && !keys[1] ){
+			if(keys[0] && !keys[1] ){ // only left key release
 				System.out.println("Left Button release: " + row + "," + col);
 				controller.clickedGrid(row, col, Constants.CLICK_TYPE_LEFT);
 				
@@ -211,13 +217,13 @@ public class BoardView implements View, MouseListener, ActionListener {
 				//handleClickResult(clickResult);
 				keys[0] = false;
 			}
-			if(!keys[0]  && keys[1] ){
+			if(!keys[0]  && keys[1] ){  // only right  key release
 				System.out.println("Right Button release: " + row + "," + col);
 				this.controller.clickedGrid(row, col, Constants.CLICK_TYPE_RIGHT);
 				this.updateView();
 				keys[1] = false;
 			}
-			if(keys[0] && keys[1]){
+			if(keys[0] && keys[1]){ // both key release
 				System.out.println("Right + Left Button release: " + row + "," + col);
 				keys[0] = false;
 				keys[1] = false;
@@ -292,6 +298,8 @@ public class BoardView implements View, MouseListener, ActionListener {
 	 */
 	private JMenuBar buildMenu(int level) {
 		JMenuBar menuBar = new JMenuBar();
+		
+		// levels menu
 		JMenu menuLevels = new JMenu("Levels");
 
 		JRadioButtonMenuItem levelBeginner = new JRadioButtonMenuItem (LEVEL_BEGINNER); // for dispaly
@@ -329,6 +337,16 @@ public class BoardView implements View, MouseListener, ActionListener {
 		menuLevels.add(levelExpert);
 
 		menuBar.add(menuLevels);
+		
+		// help menu
+		JMenu helpMenu = new JMenu("Help");
+		JMenuItem controlsItem = new JMenuItem(HELP_CONTROLS);
+		controlsItem.setName(HELP_CONTROLS);
+		controlsItem.addActionListener(this);
+		helpMenu.add(controlsItem);
+		menuBar.add(helpMenu);
+		
+		
 		return menuBar;
 	}
 
@@ -350,16 +368,43 @@ public class BoardView implements View, MouseListener, ActionListener {
 				System.out.println(LEVEL_EXPERT);
 				init(Constants.LEVEL_EXPERT);
 				this.controller.configure(this.rows, this.cols, this.mines);
+			} 
+		} else if(e.getSource() instanceof JMenuItem) {  // help Control item
+			System.out.println(HELP_CONTROLS);
+			if( ((JMenuItem)e.getSource()).getName().indexOf(HELP_CONTROLS) != -1 ) {
+				showHelpControlDialog();
 			}
-		} else if(e.getSource() instanceof JButton) {
+		}else if(e.getSource() instanceof JButton) {
 			System.out.println("reset");
 			reset();
 		}
 		updateView();
 		
 	}
-
 	
+	/**
+	 *  show help dialog 
+	 */
+	private void showHelpControlDialog() {
+		JDialog dialog = new JDialog(this.mainFrame,"Controls",true);
+		
+		dialog.setLayout(new CardLayout(15, 15));
+		JTextArea helpText 	= new JTextArea();
+		helpText.setFont(new Font("Arial", Font.BOLD , 14));
+		helpText.append("* Left-click an empty square to reveal it.\n");
+		helpText.append("* Right-click an empty square to flag it.\n");
+		helpText.append("* Left+Right click a number to reveal\r\n" + 
+				"    its adjacent squares\n\n\n");
+		
+		helpText.append("@CS5394 Round Rock Group\n");
+		
+		helpText.setEditable(false);
+		dialog.add(helpText);
+		dialog.pack();
+		dialog.setResizable(false);
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
+	}
 	
 	/**
 	 * reset the board when click the smily face
