@@ -1,8 +1,7 @@
 package ms.view;
 
 import ms.controller.Controller;
-import ms.model.Minefield;
-
+import ms.model.Model;
 /**
  * This is the interface exposed mainly to Controller and Game.
  *  
@@ -17,5 +16,5 @@ public interface View {
 	 */
 	public void setController(Controller controller);
 	
-	public void setModel(Minefield model);
+	public void setModel(Model model);
 }

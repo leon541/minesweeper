@@ -3,7 +3,7 @@ package ms.view;
 
 import ms.Constants;
 import ms.controller.Controller;
-import ms.model.Minefield;
+import ms.model.Model;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -50,7 +50,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 	JButton resetButton ; 
 	// controller
 	Controller controller;
-	Minefield model; 
+	Model model; 
 	// game specs
 	int rows, cols, mines;  
 	
@@ -425,7 +425,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 	}
 
 	@Override
-	public void setModel(Minefield model) {
+	public void setModel(Model model) {
 		// TODO Auto-generated method stub
 		this.model = model;		
 	}

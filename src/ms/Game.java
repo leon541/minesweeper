@@ -14,7 +14,7 @@ public class Game {
 
 	Controller controller;
 	View view;
-	Minefield model;
+	Model model;
 	
 	/**
 	 * entry of the game  
