@@ -78,7 +78,7 @@ public class MSController implements Controller {
 	public void configure(int rows, int cols, int mines) {
 		if(board == null)
 			board = new Minefield(rows, cols, mines);
-		else if(board.getRows() != rows || board.getColumns() != cols || board.getNumBombs() != mines)
+		else if(board.getRows() != rows || board.getColumns() != cols || board.getNumMines() != mines)
 			board.redoField(rows, cols, mines);
 		else
 			board.resetField();
@@ -175,7 +175,7 @@ public class MSController implements Controller {
 												 }
 				                                 break;
 				case Constants.CELL_TYPE_FLAG: // If cell is a flagged hidden cell, toggle flag off hidden cell;
-											   if(board.getNumFlags() == board.getNumBombs())
+											   if(board.getNumFlags() == board.getNumMines())
 					                               throw new IllegalStateException("Error: Flag state is incorrect - no flags should be on the board.");
 											  
 											   board.removedFlag();
@@ -223,7 +223,7 @@ public class MSController implements Controller {
 	private int mineReveal(){
 		if(!board.isMineFound()) { return -1; }		// If a mine was never found in the game, abort.
 		
-		int numBombs = board.getNumBombs(),
+		int numMines = board.getNumMines(),
 			mines = 0,
 			rows = board.getRows(),
 		    columns = board.getColumns(),
@@ -245,7 +245,7 @@ public class MSController implements Controller {
 				}
 				
 				// Verify if all mines were found.
-				if(mines == numBombs)
+				if(mines == numMines)
 					return 0;
 			}
 		}
@@ -419,23 +419,23 @@ public class MSController implements Controller {
 		    columns = board.getColumns(),
 		    x_neighbor = 0,
 		    y_neighbor = 0,
-		    numBombs = board.getNumBombs(),
+		    numMines = board.getNumMines(),
 		    mfcValue = 0;
 		
 		// Verify if no mines exist for this board.
-		if(numBombs == 0) { return; }
+		if(numMines == 0) { return; }
 		// Verify if all cells will hide mines.
-		else if(numBombs >= (rows * columns)) {
+		else if(numMines >= (rows * columns)) {
 			for(int r = 0; r < rows; r++)
 				for(int c = 0; c < columns; c++)
 					board.setMineValue(r, c, Constants.SHOW_MINE);
 			return;
 		}
 			
-		int[] bombs = new int[numBombs];	
+		int[] bombs = new int[numMines];	
 		
 		// Generate initial random mine placements.
-		for(int b = 0; b < numBombs; b++){
+		for(int b = 0; b < numMines; b++){
 			bombs[b] = (int) Math.floor((Math.random() * (rows * columns)));
 		}
 		
