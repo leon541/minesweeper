@@ -156,4 +156,46 @@ public interface Model{
 	 * defaulted to 0 (indicating a "blank space").
 	 */
 	public void resetField();
+	
+	/**
+	 * Indicate the game is over.
+	 * 
+	 * Sets the 'game over' indicator to True.
+	 */
+	public void gameOver();
+	
+	/**
+	 * Indicate a mine was found on the field.
+	 * 
+	 * Sets the 'mine found' indicator to true.
+	 */
+	public void mineFound();
+	
+	/**
+	 * Update the current status of the game.
+	 * 
+	 * Based on the 'mine found' and 'game over' indicators, the game status will be updated
+	 * accordingly. If the game status already show the game has ended, nothing happens; if
+	 * the game has not ended, the status is set to "Ongoing"; if the game has ended but no 
+	 * mine was found, the status is set to "Win"; otherwise, the game ended with a mine being
+	 * found, thus the status is set to "Lose".
+	 */
+	public void updateGameState();
+	
+	/**
+	 * Increase the number of available flags.
+	 */
+	public void removedFlag();
+	
+	/**
+	 * Decrease the number of available flags.
+	 */
+	public void placedFlag();
+	
+	/**
+	 * Determine whether the remaining hidden cells on the field are all hiding mines.
+	 * 
+	 * @return		True if all remaining hidden cells have a mine; False otherwise.
+	 */
+	public boolean minesLastStanding();
 }

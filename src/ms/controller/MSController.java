@@ -2,6 +2,7 @@ package ms.controller;
 
 import ms.Constants;
 import ms.model.Minefield;
+import ms.model.Model;
 
 /**
  * @author      Preston, Robert (RP1211) 
@@ -9,7 +10,7 @@ import ms.model.Minefield;
 public class MSController implements Controller {
 
 	/** The 'Model' board of the game associated with the Controller. */
-	Minefield board;
+	Model board;
 	/** The first click indicator, as maintained by the Controller. */
 	private boolean firstClick;
 	
@@ -52,7 +53,7 @@ public class MSController implements Controller {
 	 * 
 	 * @param board		The 'Minefield' object to be the board.
 	 */
-	public MSController(Minefield board) {
+	public MSController(Model board) {
 		this.board = board;
 		
 		firstClick = board.getGameState() == Constants.GAME_STATUS_READY;
