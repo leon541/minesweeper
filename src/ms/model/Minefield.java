@@ -7,7 +7,7 @@ import java.lang.Exception;
 /**
  * @author      Preston, Robert (RP1211) 
  */
-public class Minefield{	
+public class Minefield implements Model{	
 	/** 2D array of visibility values for cells. */
 	private int[][] visible_field;
 	/** 2D array of mine values for cells. */
@@ -18,7 +18,7 @@ public class Minefield{
 	private int rows;
 	
 	/** Number of mines on the field. */
-	private int numBombs;
+	private int numMines;
 	/** Current number of available flags. */
 	private int numFlags;
 	/** Indicator if the current game is over. */
@@ -40,7 +40,7 @@ public class Minefield{
 		
 		columns = default_param[1];
 		rows = default_param[0];
-	    numBombs = default_param[2];
+	    numMines = default_param[2];
 		
 		visible_field = new int[rows][columns];
 		mine_field = new int[rows][columns];
@@ -69,7 +69,7 @@ public class Minefield{
 			this.mine_field[r] = Arrays.copyOf(m.mine_field[r], columns);
 		}
 		
-		this.numBombs = m.numBombs;
+		this.numMines = m.numMines;
 		this.numFlags = m.numFlags;
 		this.gameover = m.gameover;
 		this.mine_found = m.mine_found;
@@ -84,24 +84,51 @@ public class Minefield{
 	 * 
 	 * @param rows		The number of rows the fields will have.
 	 * @param columns	The number of columns the fields will have.
-	 * @param numBombs	The number of mines that will populate the mine field.
+	 * @param numMines	The number of mines that will populate the mine field.
 	 */
-	public Minefield(int rows, int columns, int numBombs){
-		this.columns = columns;
-		this.rows = rows;
-		this.numBombs = numBombs;
-		
-		visible_field = new int[rows][columns];
-		mine_field = new int[rows][columns];
-		
-		resetField();
+	public Minefield(int rows, int columns, int numMines){
+		try {
+			String eMsg = "";
+			
+			if(rows < 1)
+				eMsg = eMsg.concat("Error: illegal value for rows - must be at least 1.");
+			if(columns < 1) {
+				if(!eMsg.equals(""))
+					eMsg.concat("\n");
+				eMsg = eMsg.concat("Error: illegal value for columns - must be at least 1.");
+			}
+			if(numMines < 0) {
+				if(!eMsg.equals(""))
+					eMsg.concat("\n");
+				eMsg = eMsg.concat("Error: illegal value for mines - must be a non-negative value.");
+			}
+			
+			if(!eMsg.equals(""))
+				throw new IllegalArgumentException(eMsg);
+				
+			this.columns = columns;
+			this.rows = rows;
+			
+			if(numMines > (rows * columns))
+				this.numMines = rows * columns;
+			else
+				this.numMines = numMines;
+			
+			visible_field = new int[rows][columns];
+			mine_field = new int[rows][columns];
+			
+			resetField();
+		}
+		catch(Exception e) {
+			System.out.println(e.toString());
+		}
 	}
 /*
 	public Minefield(int rows, int columns){
 		this.columns = columns;
 		this.rows = rows;
 		
-		calcNumBombs();
+		calcnumMines();
 		resetField();
 	}
  */
@@ -119,15 +146,15 @@ public class Minefield{
 			switch(level){
 				case Constants.LEVEL_BEGINNER: rows = 9;
 											   columns = 9;
-											   numBombs = 10;
+											   numMines = 10;
 											   break;
 				case Constants.LEVEL_INTERMEDIATE: rows = 16;
 								   				   columns = 16;
-								   				   numBombs = 40;
+								   				   numMines = 40;
 								   				   break;
 				case Constants.LEVEL_EXPERT: rows = 16;
 							 				 columns = 30;
-							 				 numBombs = 99;
+							 				 numMines = 99;
 							 				 break;
 				default: throw new IllegalArgumentException("Not a valid difficulty setting.");
 			}
@@ -143,10 +170,10 @@ public class Minefield{
 	}
 	
 	/*
-	private void calcNumBombs(){
+	private void calcnumMines(){
 		int cells = rows * columns;
 		double root = sqrt(cells)
-		numBombs = (2 * round(root)) - 8);
+		numMines = (2 * round(root)) - 8);
 	}
 	*/
 	
@@ -179,8 +206,8 @@ public class Minefield{
 	 * 
 	 * @return		The number of mines.
 	 */
-	public int getNumBombs() { return numBombs; }
-	//public void setNumBombs(int numBombs) { this.numBombs = numBombs; }
+	public int getNumMines() { return numMines; }
+	//public void setNumMines(int numMines) { this.numMines = numMines; }
 	
 	/**
 	 * Retrieve the 'game over' indicator.
@@ -243,20 +270,32 @@ public class Minefield{
 	/**
 	 * Retrieve the visible field array.
 	 * 
-	 * Returns the 2D array of visibility values for the field.
+	 * Returns a copy the 2D array of visibility values for the field.
 	 * 
 	 * @return		The 2D integer array of visibility values for the field.
 	 */
-	public int[][] getVisibleField() { return visible_field; }
+	public int[][] getVisibleField() {
+		int[][] copyVF = new int[rows][columns];
+		for(int r = 0; r < rows; r++)
+			copyVF[r] = Arrays.copyOf(visible_field[r], columns);
+		
+		return copyVF;
+	}
 	
 	/**
 	 * Retrieve the mine field array.
 	 * 
-	 * Returns the 2D array of mine values for the field.
+	 * Returns a copy of the 2D array of mine values for the field.
 	 *
 	 * @return		The 2D integer array of mine values for the field.
 	 */
-	public int[][] getMineField() { return mine_field; }
+	public int[][] getMineField()  {
+		int[][] copyMF = new int[rows][columns];
+		for(int r = 0; r < rows; r++)
+			copyMF[r] = Arrays.copyOf(mine_field[r], columns);
+		
+		return copyMF;
+	}
 	
 	/**
 	 * Decrease the number of available flags.
@@ -374,12 +413,12 @@ public class Minefield{
 	 * 
 	 * @param rows
 	 * @param columns
-	 * @param numBombs
+	 * @param numMines
 	 */
-	public void redoField(int rows, int columns, int numBombs) {
+	public void redoField(int rows, int columns, int numMines) {
 		this.columns = columns;
 		this.rows = rows;
-		this.numBombs = numBombs;
+		this.numMines = numMines;
 		
 		visible_field = new int[rows][columns];
 		mine_field = new int[rows][columns];
@@ -397,7 +436,7 @@ public class Minefield{
 	 * defaulted to 0 (indicating a "blank space").
 	 */
 	public void resetField() {
-		numFlags = numBombs;
+		numFlags = numMines;
 		gameover = mine_found = false;
 		gameState = Constants.GAME_STATUS_READY;
 		
@@ -420,7 +459,7 @@ public class Minefield{
 				if(cell != 0){
 					numLeft++;
 					
-					if(numLeft > numBombs)
+					if(numLeft > numMines)
 						return false;
 				}
 			}
