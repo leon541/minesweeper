@@ -1,17 +1,16 @@
 package ms.test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import ms.model.*;
 import ms.Constants;
 
 class BoardTest{
+	
 	@Test
 	public void testDefaultConstructor() {
 		Model board = new Minefield();
@@ -33,10 +32,34 @@ class BoardTest{
 	}
 	
 	@Test
-	public void testConstructors(){
+	public void testCopyConstructor() {
+		Model board = new Minefield(2);
+		board.setVisibleValue(8, 8, 2);
+		board.setMineValue(8, 8, 5);
+		
 		boolean shouldFail = true;
 		
-	// Level Constructor Tests
+		// Expected Value Test - Expected Results: Pass
+		testCopyConstruct(board);
+		
+		// Unacceptable Value Tests - Expected Results: Fail
+		try { testCopyConstruct(null); }
+		catch(AssertionError e) { 
+			System.out.println("Expected error detected for testing CC-E1>> " + e.getMessage());
+			shouldFail = false; 
+		}
+		finally { 
+			if(shouldFail) {
+				fail("Error eCC-E1: Level Constuctor should have failed - NULL object given.");
+				shouldFail = true;
+			}
+		}
+	}
+	
+	@Test
+	public void testLevelConstructor() {
+		boolean shouldFail = true;
+		
 		// Expected Value Tests - Expected Results: Pass
 		testLevelConstruct(0);
 		testLevelConstruct(1);
@@ -66,29 +89,12 @@ class BoardTest{
 				shouldFail = true;
 			}
 		}
-		
-	// Model Object Constructor Tests	
-		Model board = new Minefield(2);
-		board.setVisibleValue(8, 8, 2);
-		board.setMineValue(8, 8, 5);
-		
-		// Expected Value Test - Expected Results: Pass
-		testCopyConstruct(board);
-		
-		// Unacceptable Value Tests - Expected Results: Fail
-		try { testCopyConstruct(null); }
-		catch(AssertionError e) { 
-			System.out.println("Expected error detected for testing CC-E1>> " + e.getMessage());
-			shouldFail = false; 
-		}
-		finally { 
-			if(shouldFail) {
-				fail("Error eCC-E1: Level Constuctor should have failed - NULL object given.");
-				shouldFail = true;
-			}
-		}
+	}
 	
-	// RCM Parameter Constructor Tests
+	@Test
+	public void testParamConstructor(){
+		boolean shouldFail = true;
+
 		// Expected Values Test - Expected Results: Pass
 		testParamConstruct(1,1,0);
 		testParamConstruct(1,9,4);
@@ -134,14 +140,12 @@ class BoardTest{
 		}
 	}
 	
-	
 	@Test
-	public void testMethods() {
+	public void testFieldValuesMethods() {
 		Model m = new Minefield();
 		
 		int rows = m.getRows(),
-			columns = m.getColumns(),
-			mines = m.getNumMines();
+			columns = m.getColumns();
 		
 		int rand_cell = (int) Math.floor(Math.random() * (rows * columns)),
 			x = rand_cell / columns,
@@ -185,95 +189,123 @@ class BoardTest{
 		assertTrue(m.getMineValue(x, -1) < Constants.SHOW_MINE_FIRED, "Error eM-GMV5c1: Indexed cell outside array at negative y-value returned a mine value.  Expected: <" + String.valueOf(Constants.SHOW_MINE_FIRED) + " - \"Failed\"");
 		assertTrue(m.getMineValue(x, m.getColumns()) < Constants.SHOW_MINE_FIRED, "Error eM-GMV5c2: Indexed cell outside array at y-value >= 'Columns' returned a mine value.  Expected: <" + String.valueOf(Constants.SHOW_MINE_FIRED) + " - \"Failed\"");
 	
-	// Misc. Method Tests
-		Model dupl = new Minefield((Minefield) m);
-		
+	}
+	
+	@Test
+	public void testGameStateIndicatorMethods() {
+		Model m = new Minefield();
+	// Game State, Mine Found & Game Over Tests	
 		// Expected State Values Test - Expected Results: Pass
-		assertEquals(Constants.GAME_STATUS_READY, dupl.getGameState(), "Error eM-GS1: 'Game state' default value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_READY + " - \"READY\""));
-		assertFalse(dupl.isGameOver(), "Error eM-GO1: 'Game Over' indicator default is incorrect.  Expected: False");
-		assertFalse(dupl.isMineFound(), "Error eM-BF1: 'Mine Found' indicator default is incorrect.  Expected: False");
-		dupl.updateGameState();
-		assertEquals(Constants.GAME_STATUS_ONGOING, dupl.getGameState(), "Error eM-GS2: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_ONGOING + " - \"ONGOING\""));
-		dupl.gameOver();
-		assertTrue(dupl.isGameOver(), "Error eM-GO2: 'Game Over' indicator is incorrect.  Expected: True");
-		dupl.updateGameState();
-		assertEquals(Constants.GAME_STATUS_WIN, dupl.getGameState(), "Error eM-GS3: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_WIN + " - \"WIN\""));
+		assertEquals(Constants.GAME_STATUS_READY, m.getGameState(), "Error eM-GS1: 'Game state' default value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_READY + " - \"READY\""));
+		assertFalse(m.isGameOver(), "Error eM-GO1: 'Game Over' indicator default is incorrect.  Expected: False");
+		assertFalse(m.isMineFound(), "Error eM-BF1: 'Mine Found' indicator default is incorrect.  Expected: False");
+		m.updateGameState();
+		assertEquals(Constants.GAME_STATUS_ONGOING, m.getGameState(), "Error eM-GS2: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_ONGOING + " - \"ONGOING\""));
+		m.gameOver();
+		assertTrue(m.isGameOver(), "Error eM-GO2: 'Game Over' indicator is incorrect.  Expected: True");
+		m.updateGameState();
+		assertEquals(Constants.GAME_STATUS_WIN, m.getGameState(), "Error eM-GS3: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_WIN + " - \"WIN\""));
 		
-		dupl.mineFound();
-		assertTrue(dupl.isMineFound(), "Error eM-BF2: 'Mine Found' indicator is incorrect.  Expected: True");
-		dupl.updateGameState();
-		assertEquals(Constants.GAME_STATUS_WIN, dupl.getGameState(), "Error eM-GS4: 'Game state' value does not match - Should not change after 'End' condition is met.  Expected: " + String.valueOf(Constants.GAME_STATUS_WIN + " - \"WIN\""));
+		m.mineFound();
+		assertTrue(m.isMineFound(), "Error eM-BF2: 'Mine Found' indicator is incorrect.  Expected: True");
+		m.updateGameState();
+		assertEquals(Constants.GAME_STATUS_WIN, m.getGameState(), "Error eM-GS4: 'Game state' value does not match - Should not change after 'End' condition is met.  Expected: " + String.valueOf(Constants.GAME_STATUS_WIN + " - \"WIN\""));
 
-		dupl = new Minefield((Minefield) m);
-		dupl.gameOver();
-		assertTrue(dupl.isGameOver(), "Error eM-GO3: 'Game Over' indicator is incorrect.  Expected: True");
-		dupl.updateGameState();
-		assertEquals(Constants.GAME_STATUS_WIN, dupl.getGameState(), "Error eM-GS5: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_WIN + " - \"WIN\""));
+		m = new Minefield();
+		m.gameOver();
+		assertTrue(m.isGameOver(), "Error eM-GO3: 'Game Over' indicator is incorrect.  Expected: True");
+		m.updateGameState();
+		assertEquals(Constants.GAME_STATUS_WIN, m.getGameState(), "Error eM-GS5: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_WIN + " - \"WIN\""));
 		
-		dupl = new Minefield((Minefield) m);
-		dupl.updateGameState();
-		assertEquals(Constants.GAME_STATUS_ONGOING,dupl.getGameState(), "Error eM-GS6: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_ONGOING + " - \"ONGOING\""));
-		dupl.gameOver();
-		assertTrue(dupl.isGameOver(), "Error eM-GO4: 'Game Over' indicator is incorrect.  Expected: True");
-		dupl.mineFound();
-		assertTrue(dupl.isMineFound(), "Error eM-BF3: 'Mine Found' indicator is incorrect.  Expected: True");
-		dupl.updateGameState();
-		assertEquals(Constants.GAME_STATUS_LOSE, dupl.getGameState(), "Error eM-GS7: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_LOSE + " - \"LOSE\""));
+		m = new Minefield();
+		m.updateGameState();
+		assertEquals(Constants.GAME_STATUS_ONGOING,m.getGameState(), "Error eM-GS6: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_ONGOING + " - \"ONGOING\""));
+		m.gameOver();
+		assertTrue(m.isGameOver(), "Error eM-GO4: 'Game Over' indicator is incorrect.  Expected: True");
+		m.mineFound();
+		assertTrue(m.isMineFound(), "Error eM-BF3: 'Mine Found' indicator is incorrect.  Expected: True");
+		m.updateGameState();
+		assertEquals(Constants.GAME_STATUS_LOSE, m.getGameState(), "Error eM-GS7: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_LOSE + " - \"LOSE\""));
 		
-		dupl = new Minefield((Minefield) m);
-		dupl.gameOver();
-		assertTrue(dupl.isGameOver(), "Error eM-GO5: 'Game Over' indicator is incorrect.  Expected: True");
-		dupl.mineFound();
-		assertTrue(dupl.isMineFound(), "Error eM-BF4: 'Mine Found' indicator is incorrect.  Expected: True");
-		dupl.updateGameState();
-		assertEquals(Constants.GAME_STATUS_LOSE, dupl.getGameState(), "Error eM-GS8: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_LOSE + " - \"LOSE\""));
+		m = new Minefield();
+		m.gameOver();
+		assertTrue(m.isGameOver(), "Error eM-GO5: 'Game Over' indicator is incorrect.  Expected: True");
+		m.mineFound();
+		assertTrue(m.isMineFound(), "Error eM-BF4: 'Mine Found' indicator is incorrect.  Expected: True");
+		m.updateGameState();
+		assertEquals(Constants.GAME_STATUS_LOSE, m.getGameState(), "Error eM-GS8: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_LOSE + " - \"LOSE\""));
 		
 		// Unacceptable State Values Tests - Expected Results: Fail
-		dupl = new Minefield((Minefield) m);
-		dupl.mineFound();
-		assertTrue(dupl.isMineFound(), "Error eM-BF5: 'Mine Found' indicator is incorrect.  Expected: True");
-		dupl.updateGameState();
-		assertEquals(Constants.GAME_STATUS_READY, dupl.getGameState(), "Error eM-GS9: 'Game state' value does not match - Illegal state accepted.  Expected: " + String.valueOf(Constants.GAME_STATUS_READY + " - \"READY\""));
+		m = new Minefield();
+		m.mineFound();
+		assertTrue(m.isMineFound(), "Error eM-BF5: 'Mine Found' indicator is incorrect.  Expected: True");
+		m.updateGameState();
+		assertEquals(Constants.GAME_STATUS_READY, m.getGameState(), "Error eM-GS9: 'Game state' value does not match - Illegal state accepted.  Expected: " + String.valueOf(Constants.GAME_STATUS_READY + " - \"READY\""));
 		
-		dupl = new Minefield((Minefield) m);
-		dupl.updateGameState();
-		assertEquals(Constants.GAME_STATUS_ONGOING,dupl.getGameState(), "Error eM-GS10: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_ONGOING + " - \"ONGOING\""));
-		dupl.mineFound();
-		assertTrue(dupl.isMineFound(), "Error eM-BF6: 'Mine Found' indicator is incorrect.  Expected: True");
-		dupl.updateGameState();
-		assertEquals(Constants.GAME_STATUS_ONGOING, dupl.getGameState(), "Error eM-GS11: 'Game state' value does not match - Illegal state accepted.  Expected: " + String.valueOf(Constants.GAME_STATUS_ONGOING + " - \"ONGOING\""));
+		m = new Minefield();
+		m.updateGameState();
+		assertEquals(Constants.GAME_STATUS_ONGOING,m.getGameState(), "Error eM-GS10: 'Game state' value does not match.  Expected: " + String.valueOf(Constants.GAME_STATUS_ONGOING + " - \"ONGOING\""));
+		m.mineFound();
+		assertTrue(m.isMineFound(), "Error eM-BF6: 'Mine Found' indicator is incorrect.  Expected: True");
+		m.updateGameState();
+		assertEquals(Constants.GAME_STATUS_ONGOING, m.getGameState(), "Error eM-GS11: 'Game state' value does not match - Illegal state accepted.  Expected: " + String.valueOf(Constants.GAME_STATUS_ONGOING + " - \"ONGOING\""));
 		
 	// Mines-Last-Standing Test
-		dupl = new Minefield();
-		assertFalse(dupl.minesLastStanding(), "Error eM-MLS1: Incorrect default result for remaining unrevealed mines - No mines on board.  Expected: False");
+		m = new Minefield();
 		
-		dupl.setMineValue(x, y, -1);
-		assertFalse(dupl.minesLastStanding(), "Error eM-MLS2: Incorrect result for remaining unrevealed mines - Other non-mine cells still hidden.  Expected: False");
+		int rows = m.getRows(),
+			columns = m.getColumns();
 		
-		dupl.setVisibleValue((x - 1) % dupl.getRows(), y, Constants.CELL_TYPE_FLAG);
-		dupl.setVisibleValue(x, (y - 1) % dupl.getColumns(), Constants.CELL_TYPE_QUESTION);
-		assertFalse(dupl.minesLastStanding(), "Error eM-MLS3: Incorrect result for remaining unrevealed mines - Other non-mine cells still hidden.  Expected: False");
+		int rand_cell = (int) Math.floor(Math.random() * (rows * columns)),
+				x = rand_cell / columns,
+				y = rand_cell % columns;
+		
+		assertFalse(m.minesLastStanding(), "Error eM-MLS1: Incorrect default result for remaining unrevealed mines - No mines on board.  Expected: False");
+		
+		m.setMineValue(x, y, -1);
+		assertFalse(m.minesLastStanding(), "Error eM-MLS2: Incorrect result for remaining unrevealed mines - Other non-mine cells still hidden.  Expected: False");
+		
+		m.setVisibleValue((x - 1) % rows, y, Constants.CELL_TYPE_FLAG);
+		m.setVisibleValue(x, (y - 1) % columns, Constants.CELL_TYPE_QUESTION);
+		assertFalse(m.minesLastStanding(), "Error eM-MLS3: Incorrect result for remaining unrevealed mines - Other non-mine cells still hidden.  Expected: False");
 
-		for(int r = 0; r < dupl.getRows(); r++) {
-			for(int c = 0; c < dupl.getColumns(); c++) {
+		for(int r = 0; r < m.getRows(); r++) {
+			for(int c = 0; c < m.getColumns(); c++) {
 				if(r == x && c == y)
 					continue;
-				dupl.setVisibleValue(r, c, Constants.CELL_TYPE_REVEAL);
+				m.setVisibleValue(r, c, Constants.CELL_TYPE_REVEAL);
 			}
 		}
 		
-		assertTrue(dupl.minesLastStanding(), "Error eM-MLS4: Incorrect result for remaining unrevealed mines - Mine cells are the only ones still hidden.  Expected: True");
+		assertTrue(m.minesLastStanding(), "Error eM-MLS4: Incorrect result for remaining unrevealed mines - Mine cells are the only ones still hidden.  Expected: True");
 
-		dupl = new Minefield();
-		for(int r = 0; r < dupl.getRows(); r++) {
-			for(int c = 0; c < dupl.getColumns(); c++) {
-				dupl.setMineValue(r, c, Constants.SHOW_MINE);
+		m = new Minefield();
+		for(int r = 0; r < m.getRows(); r++) {
+			for(int c = 0; c < m.getColumns(); c++) {
+				m.setMineValue(r, c, Constants.SHOW_MINE);
 			}
 		}
 		
-		assertTrue(dupl.minesLastStanding(), "Error eM-MLS5: Incorrect result for remaining unrevealed mines - Mine cells are the only ones still hidden.  Expected: True");
+		assertTrue(m.minesLastStanding(), "Error eM-MLS5: Incorrect result for remaining unrevealed mines - Mine cells are the only ones still hidden.  Expected: True");
+	}
 	
-	//Reset Field Test
+	@Test
+	public void testResetFieldMethod() {
+		Model m = new Minefield();
+		
+		int rows = m.getRows(),
+			columns = m.getColumns(),
+			mines = m.getNumMines();
+		
+		int rand_cell = (int)Math.floor(Math.random() * (rows * columns)),
+			x = rand_cell / columns,
+			y = rand_cell % columns,
+			v = 0,			// Any value other than Constant.CELL_TYPE_HIDDEN
+			b = 6;			// Any non-zero value between -2 and 8
+		
+		m.setVisibleValue(x, y, v);
+		m.setMineValue(x, y, b);
+		
 		int[][] blankVF = new int[rows][columns],
 				blankMF = new int[rows][columns];
 		
@@ -282,7 +314,7 @@ class BoardTest{
 			Arrays.fill(blankMF[r],0);
 		}
 		
-		dupl = new Minefield((Minefield) m);
+		Model dupl = new Minefield((Minefield) m);
 		Model mirror = dupl;
 		dupl.resetField();
 		
@@ -300,23 +332,39 @@ class BoardTest{
 		assertTrue(Arrays.deepEquals(blankMF, dupl.getMineField()), "Error eM-RESF9b: Reset mine field should match blank mine field.  Expected: True");
 		
 		assertSame(mirror, dupl, "Error eM-RESF10: Reset Model Object should maintain the same object reference.  Expected: Same");
+	}
+	
+	@Test
+	public void testRedoFieldMethod() {
+		Model m = new Minefield();
 		
-	// Redo Field Tests
+		int rows = m.getRows(),
+			columns = m.getColumns(),
+			mines = m.getNumMines();
+		
+		int rand_cell = (int)Math.floor(Math.random() * (rows * columns)),
+			x = rand_cell / columns,
+			y = rand_cell % columns,
+			v = (int)Math.floor(Math.random() * 4),
+			b = (int)Math.floor(Math.random() * 11) - 2;
+		
+		m.setVisibleValue(x, y, v);
+		m.setMineValue(x, y, b);
+		
 		//Expected Values Test - Expected Results: Pass
-		dupl = new Minefield((Minefield) m);
-		mirror = dupl;
+		Model dupl = new Minefield((Minefield) m);
+		Model mirror = dupl;
 		rows = 3;
 		columns = 3;
 		mines = 4;
 		
-		blankVF = new int[rows][columns];
-		blankMF = new int[rows][columns];
+		int[][] blankVF = new int[rows][columns],
+				blankMF = new int[rows][columns];
 		
 		for(int r = 0; r < rows; r++){
 			Arrays.fill(blankVF[r], Constants.CELL_TYPE_HIDDEN);
 			Arrays.fill(blankMF[r],0);
 		}
-		
 		dupl.redoField(rows, columns, mines);
 		
 		assertEquals(rows, dupl.getRows(), "Error eM-RDF1: 'Rows' is not the right value.  Expected: " + String.valueOf(rows));
@@ -336,6 +384,7 @@ class BoardTest{
 		
 		//Unacceptable Values Test - Expected Results: Fail
 		boolean shouldFail = true;
+		
 		dupl = new Minefield((Minefield) m);
 		mirror = dupl;
 
