@@ -87,41 +87,7 @@ public class Minefield implements Model{
 	 * @param numMines	The number of mines that will populate the mine field.
 	 */
 	public Minefield(int rows, int columns, int numMines){
-		try {
-			String eMsg = "";
-			
-			if(rows < 1)
-				eMsg = eMsg.concat("Error: illegal value for rows - must be at least 1.");
-			if(columns < 1) {
-				if(!eMsg.equals(""))
-					eMsg.concat("\n");
-				eMsg = eMsg.concat("Error: illegal value for columns - must be at least 1.");
-			}
-			if(numMines < 0) {
-				if(!eMsg.equals(""))
-					eMsg.concat("\n");
-				eMsg = eMsg.concat("Error: illegal value for mines - must be a non-negative value.");
-			}
-			
-			if(!eMsg.equals(""))
-				throw new IllegalArgumentException(eMsg);
-				
-			this.columns = columns;
-			this.rows = rows;
-			
-			if(numMines > (rows * columns))
-				this.numMines = rows * columns;
-			else
-				this.numMines = numMines;
-			
-			visible_field = new int[rows][columns];
-			mine_field = new int[rows][columns];
-			
-			resetField();
-		}
-		catch(Exception e) {
-			System.out.println(e.toString());
-		}
+		redoField(rows, columns, numMines);
 	}
 /*
 	public Minefield(int rows, int columns){
@@ -254,17 +220,25 @@ public class Minefield implements Model{
 	 * found, thus the status is set to "Lose".
 	 */
 	public void updateGameState() {
-		if(gameState > Constants.GAME_STATUS_ONGOING) { return; }
-		
-		gameState = Constants.GAME_STATUS_ONGOING;
-		
-		if(!gameover) { return; }
-		
-		gameState++;
-		
-		if(!mine_found) { return; }
+		try {
+			if(mine_found && !gameover)
+				throw new IllegalStateException("Error: Invalid game status - Mine found but game is not over.");
 			
-		gameState++;
+			if(gameState > Constants.GAME_STATUS_ONGOING) { return; }
+			
+			gameState = Constants.GAME_STATUS_ONGOING;
+			
+			if(!gameover) { return; }
+			
+			gameState++;
+			
+			if(!mine_found) { return; }
+				
+			gameState++;
+		}
+		catch(Exception e) {
+			System.out.println(e.toString());
+		}
 	}
 	
 	/**
@@ -323,7 +297,7 @@ public class Minefield implements Model{
 			return visible_field[x][y];
 		}
 		catch(Exception e){
-			System.out.println(e.getMessage());
+			System.out.println(e.toString());
 			return -1;
 		}
 	}
@@ -349,7 +323,7 @@ public class Minefield implements Model{
 			return 0;
 		}
 		catch(Exception e){
-			System.out.println(e.getMessage());
+			System.out.println(e.toString());
 			return -1;
 		}
 	}
@@ -369,13 +343,9 @@ public class Minefield implements Model{
 		try{
 			return mine_field[x][y];
 		}
-		catch(ArrayIndexOutOfBoundsException e){
-			System.out.println(e.getMessage());
-			return -3;
-		}
 		catch(Exception e){
-			System.out.println(e.getMessage());
-			return -4;
+			System.out.println(e.toString());
+			return -3;
 		}
 	}
 	
@@ -400,7 +370,7 @@ public class Minefield implements Model{
 			return 0;
 		}
 		catch(Exception e){
-			System.out.println(e.getMessage());
+			System.out.println(e.toString());
 			return -1;
 		}
 	}
@@ -416,14 +386,41 @@ public class Minefield implements Model{
 	 * @param numMines
 	 */
 	public void redoField(int rows, int columns, int numMines) {
-		this.columns = columns;
-		this.rows = rows;
-		this.numMines = numMines;
-		
-		visible_field = new int[rows][columns];
-		mine_field = new int[rows][columns];
-		
-		resetField();		
+		try {
+			String eMsg = "";
+			
+			if(rows < 1)
+				eMsg = eMsg.concat("Error: illegal value for rows - must be at least 1.");
+			if(columns < 1) {
+				if(!eMsg.equals(""))
+					eMsg.concat("\n");
+				eMsg = eMsg.concat("Error: illegal value for columns - must be at least 1.");
+			}
+			if(numMines < 0) {
+				if(!eMsg.equals(""))
+					eMsg.concat("\n");
+				eMsg = eMsg.concat("Error: illegal value for mines - must be a non-negative value.");
+			}
+			
+			if(!eMsg.equals(""))
+				throw new IllegalArgumentException(eMsg);
+				
+			this.columns = columns;
+			this.rows = rows;
+			
+			if(numMines > (rows * columns))
+				this.numMines = rows * columns;
+			else
+				this.numMines = numMines;
+			
+			visible_field = new int[rows][columns];
+			mine_field = new int[rows][columns];
+			
+			resetField();
+		}
+		catch(Exception e) {
+			System.out.println(e.toString());
+		}		
 	}
 	
 	/**
@@ -452,16 +449,20 @@ public class Minefield implements Model{
 	 * @return		True if all remaining hidden cells have a mine; False otherwise.
 	 */
 	public boolean minesLastStanding(){
-		int numLeft = 0;
+		int vfcValue = 0,
+			mfcValue = 0;
 		
-		for(int[] row : visible_field){
-			for(int cell : row){
-				if(cell != 0){
-					numLeft++;
-					
-					if(numLeft > numMines)
-						return false;
-				}
+		for(int r = 0; r < rows; r++) {
+			for(int c = 0; c < columns; c++) {
+				vfcValue = visible_field[r][c];
+				
+				if(vfcValue == Constants.CELL_TYPE_REVEAL) { continue; }
+				
+				mfcValue = mine_field[r][c];
+				
+				if(mfcValue < 0) { continue; }
+				
+				return false;
 			}
 		}
 		
