@@ -68,8 +68,8 @@ public class CellButton extends JButton {
 	 * Update Icon according to cover and under value
 	 * only do when changes.
 	 * 
-	 * @param cover
-	 * @param under
+	 * @param cover    cover value
+	 * @param under    underline value
 	 */
 	public void updateIcon(int cover, int under) {
 		ImageIcon newIcon = getNewIcon(cover, under);
@@ -81,9 +81,9 @@ public class CellButton extends JButton {
 	/**
 	 * calculate the new Icon according to cover and under value
 	 *  
-	 * @param cover
-	 * @param under
-	 * @return
+	 * @param cover  	cover value
+	 * @param under 	underline value
+	 * @return			the Image to be shown
 	 */
 	public ImageIcon getNewIcon(int cover, int under) {
 		if(cover > 0 ) {

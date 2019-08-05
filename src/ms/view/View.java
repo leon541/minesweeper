@@ -12,7 +12,7 @@ public interface View {
 		
 	/**
 	 * inject the controller
-	 * @param controller
+	 * @param controller  the Controller
 	 */
 	public void setController(Controller controller);
 	

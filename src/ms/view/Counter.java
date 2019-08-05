@@ -43,10 +43,10 @@ public class Counter extends JPanel {
 
 	/**
 	 * constructor
-	 * @param initValue
-	 * @param upper
-	 * @param lower
-	 * @param isTimer
+	 * @param initValue  initial value
+	 * @param upper      upper bound
+	 * @param lower      lower bound
+	 * @param isTimer    whether this is a Timer
 	 */
 	public Counter(int initValue, int upper, int lower, boolean isTimer) {
 		this.initValue = initValue;
@@ -71,7 +71,7 @@ public class Counter extends JPanel {
 
 	/**
 	 * Set the value
-	 * @param value
+	 * @param value  vale to be set
 	 */
 	public void setValue(int value) {
 		if (value <= upper && value >= lower) {
@@ -82,7 +82,7 @@ public class Counter extends JPanel {
 
 	/**
 	 * Get the value
-	 * @return
+	 * @return   current value
 	 */
 	public int getValue() {
 		return value;
@@ -110,7 +110,7 @@ public class Counter extends JPanel {
 
 	/**
 	 * Checks if the timer has been started and returns true or false
-	 * @return
+	 * @return    whether the timer is started
 	 */
 	public boolean isTimerStarted() {
 		return timerStarted;
@@ -132,7 +132,7 @@ public class Counter extends JPanel {
 
 	/**
 	 * Create action listener for timer
-	 * @param delay
+	 * @param delay   the delay timer
 	 */
 	public void createActionListener(int delay) {
 		listener = new ActionListener() {
@@ -163,7 +163,7 @@ public class Counter extends JPanel {
 
 	/**
 	 * Set label text
-	 * @param val
+	 * @param val  value to be set
 	 */
 	private void setLabelText(int val) {
 		label.setText(String.format(format, val));

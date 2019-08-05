@@ -78,7 +78,7 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 	/**
 	 * inject controller 
-	 * @param controller
+	 * @param controller the Controller
 	 */
 	@Override
 	public void setController(Controller controller) {
@@ -263,10 +263,10 @@ public class BoardView implements View, MouseListener, ActionListener {
 	/**
 	 * Initialize with spec 
 	 * 
-	 * @param level
-	 * @param rows
-	 * @param cols
-	 * @param mines
+	 * @param level  	level of the game
+	 * @param rows    	number of rows
+	 * @param cols		number of columns
+	 * @param mines		number of mines
 	 */
 	public void init(int level,  int rows, int cols, int mines) {
 		// TODO Auto-generated method stub
@@ -352,7 +352,6 @@ public class BoardView implements View, MouseListener, ActionListener {
 
 	/**
 	 * Handle menu and reset event 
-	 * @Override 
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() instanceof JRadioButtonMenuItem) {  // leve in the menu
