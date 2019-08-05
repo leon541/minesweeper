@@ -104,6 +104,7 @@ public interface Model{
 	 * @param y				The column value of the cell.
 	 * @param visibility	The desired visibility value at index [x, y]; -1 if index [x, y]
 	 * 						does not exist.
+	 * @return				0 for success; 1 for failure
 	 */	
 	public int setVisibleValue(int x, int y, int visibility);
 	
@@ -129,8 +130,9 @@ public interface Model{
 	 * 
 	 * @param x				The row value of the cell.
 	 * @param y				The column value of the cell.
-	 * @param visibility	The desired mine value at index [x, y]; -1 if index [x, y] does 
+	 * @param mine_value	The desired mine value at index [x, y]; -1 if index [x, y] does 
 	 * 						not exist.
+	 * @return				0 for success; 1 for failure
 	 */	
 	public int setMineValue(int x, int y, int mine_value);
 	
@@ -140,9 +142,9 @@ public interface Model{
 	 * Reconstructs the fields using the given number of rows, columns and mines. The fields, 
 	 * status and indicators are then set to their default values.
 	 * 
-	 * @param rows
-	 * @param columns
-	 * @param numMines
+	 * @param rows			The desired new number of rows
+	 * @param columns		The desired new number of columns
+	 * @param numMines		The desired new number of mines
 	 */
 	public void redoField(int rows, int columns, int numMines);
 	
