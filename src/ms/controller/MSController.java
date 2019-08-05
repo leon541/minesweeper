@@ -56,6 +56,7 @@ public class MSController implements Controller {
 	public MSController(Model board) {
 		this.board = board;
 		
+		if(board == null) { return; }
 		firstClick = board.getGameState() == Constants.GAME_STATUS_READY;
 	}
 	
@@ -77,14 +78,37 @@ public class MSController implements Controller {
 	 */
 	@Override
 	public void configure(int rows, int cols, int mines) {
-		if(board == null)
-			board = new Minefield(rows, cols, mines);
-		else if(board.getRows() != rows || board.getColumns() != cols || board.getNumMines() != mines)
-			board.redoField(rows, cols, mines);
-		else
-			board.resetField();
-
-		firstClick = true;
+		try {
+			String err = "";
+			if(rows < 1)
+				err = err.concat("Illegal value for Rows: " + String.valueOf(rows) +". Must be at least 1.");
+			if(cols < 1) {
+				if (!err.equals(""))
+					err = err.concat("\n");
+				err = err.concat("Illegal value for Columns: " + String.valueOf(cols) + ". Must be at least 1.");
+			}
+			
+			if(mines < 0) {
+				if(!err.equals(""))
+					err = err.concat("\n");
+				err = err.concat("Illegal value for Mines: " + String.valueOf(mines) + ". Must be a non-negative value.");
+			}
+			
+			if(!err.equals(""))
+				throw new IllegalArgumentException(err);
+			
+			if(board == null)
+				board = new Minefield(rows, cols, mines);
+			else if(board.getRows() != rows || board.getColumns() != cols || board.getNumMines() != mines)
+				board.redoField(rows, cols, mines);
+			else
+				board.resetField();
+	
+			firstClick = true;
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
 	}
 
 	@Override
