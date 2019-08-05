@@ -18,6 +18,7 @@ public class Game {
 	
 	/**
 	 * entry of the game  
+	 * @param args  arguments
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
