@@ -144,7 +144,6 @@ public class MSController implements Controller {
 	 * @param row		The row value of the cell clicked.
 	 * @param col		The column value of the cell clicked.
 	 * @param type		The type of click performed (See 'Constants.java').
-	 * @return			The current game status via the gameStatus variable, or -1.
 	 */
 	@Override
 	public void clickedGrid(int row, int col, int type) {
