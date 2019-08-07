@@ -56,7 +56,11 @@ public class MSController implements Controller {
 	public MSController(Model board) {
 		this.board = board;
 		
-		if(board == null) { return; }
+		if(board == null) { 
+			firstClick = true;
+			return;
+		}
+		
 		firstClick = board.getGameState() == Constants.GAME_STATUS_READY;
 	}
 	
@@ -147,8 +151,15 @@ public class MSController implements Controller {
 	 */
 	@Override
 	public void clickedGrid(int row, int col, int type) {
-		// Return if the game has already ended.
-		if ( board.getGameState() > Constants.GAME_STATUS_ONGOING ) { return ; }
+		try {
+			// Return if the game has already ended.
+			if ( board.getGameState() > Constants.GAME_STATUS_ONGOING ) { return ; }
+		}
+		catch(Exception e) {
+			// Typically encountered if board is null.
+			System.out.println(e.toString());
+			return;
+		}
 		
 		int vfcValue = 0;
 		

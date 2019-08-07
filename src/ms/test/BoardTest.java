@@ -490,7 +490,7 @@ class BoardTest{
 		checkBlankBoard(board);	
 	}
 	
-	private void testCopyConstruct(Model m) {
+	protected void testCopyConstruct(Model m) {
 		assertNotNull(m,"Error eCC-A1: Argument is null.  Expected: Non-null Model Object.");
 		
 		if(m == null) { return; }
